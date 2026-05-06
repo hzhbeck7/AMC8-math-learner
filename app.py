@@ -39,7 +39,7 @@ st.set_page_config(
     page_title="AMC 8 智学助手",
     page_icon="🧠",
     layout="wide",
-    initial_sidebar_state="collapsed",  # 移动端默认折叠侧边栏
+    initial_sidebar_state="collapsed",
 )
 
 # ──────────────────────────────────────────────
@@ -213,14 +213,6 @@ CUSTOM_CSS = """
         margin: 0 auto;
     }
 
-    /* 侧边栏美化 */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
-    }
-    [data-testid="stSidebar"] .stMarkdown {
-        font-size: 0.95rem;
-    }
-
     /* 上传区域 */
     .upload-hint {
         text-align: center;
@@ -326,11 +318,11 @@ CUSTOM_CSS = """
         }
     }
 
-    /* 输入框移动端优化 */
+    /* 输入框移动端优化 - 防止 iOS 缩放 */
     @media screen and (max-width: 768px) {
         .stTextInput > div > div > input,
         .stTextArea > div > div > textarea {
-            font-size: 16px !important; /* 防止 iOS 缩放 */
+            font-size: 16px !important;
         }
     }
 
@@ -346,6 +338,22 @@ CUSTOM_CSS = """
         [data-testid="stFileUploader"] {
             font-size: 0.9rem;
         }
+        [data-testid="stFileUploader"] section {
+            padding: 1rem !important;
+        }
+    }
+
+    /* 隐藏 Streamlit 默认的文件上传区域样式，使其更紧凑 */
+    [data-testid="stFileUploader"] section {
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+    
+    /* 上传成功后的文件信息样式 */
+    [data-testid="stFileUploader"] details {
+        background: #f0fdf4;
+        border-radius: 8px;
+        margin-top: 0.5rem;
     }
 </style>
 """
@@ -595,11 +603,22 @@ def simple_markdown_to_html(text: str) -> str:
 
 
 # ══════════════════════════════════════════════
-# 设置区域组件（用于侧边栏或主页面）
+# 主界面
 # ══════════════════════════════════════════════
 
-def render_settings_section():
-    """渲染设置区域，返回 (api_key, model_choice, user_text)"""
+def main():
+    # ── 标题 ──
+    st.markdown(
+        """
+        <div class="app-title">
+            <h1>🧠 AMC 8 智学助手</h1>
+            <p>上传一道 AMC 8 数学题，你的专属竞赛教练即刻开讲！</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ── 设置区域（统一放在主页面，桌面端和移动端共用）──
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
     st.markdown("### ⚙️ 设置")
 
@@ -609,6 +628,7 @@ def render_settings_section():
         type="password",
         placeholder="AI...",
         help="您的 API Key 仅在当前会话有效，不会被存储到服务器",
+        key="api_key_input",
     )
 
     # 优先级逻辑：用户输入 > st.secrets
@@ -638,6 +658,7 @@ def render_settings_section():
         ],
         index=0,
         help="gemini-2.5-flash 推荐，性价比高；gemini-2.5-pro 推理能力最强",
+        key="model_select",
     )
 
     st.markdown("---")
@@ -648,6 +669,7 @@ def render_settings_section():
         placeholder="例如：这道题我不理解第 2 步...",
         height=100,
         help="可以补充你对这道题的疑问",
+        key="user_text_input",
     )
 
     st.markdown(
@@ -661,71 +683,6 @@ def render_settings_section():
     )
     st.markdown('</div>', unsafe_allow_html=True)
 
-    return api_key, model_choice, user_text
-
-
-# ══════════════════════════════════════════════
-# 主界面
-# ══════════════════════════════════════════════
-
-def main():
-    # ── 标题 ──
-    st.markdown(
-        """
-        <div class="app-title">
-            <h1>🧠 AMC 8 智学助手</h1>
-            <p>上传一道 AMC 8 数学题，你的专属竞赛教练即刻开讲！</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    # ── 桌面端：侧边栏设置 ──
-    # 使用 CSS 媒体查询检测屏幕宽度，在移动端隐藏侧边栏内容
-    st.markdown(
-        """
-        <style>
-        /* 桌面端显示侧边栏 */
-        @media screen and (min-width: 769px) {
-            .mobile-settings { display: none !important; }
-        }
-        /* 移动端隐藏侧边栏内容，显示主页面设置 */
-        @media screen and (max-width: 768px) {
-            .desktop-sidebar { display: none !important; }
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    # 桌面端侧边栏
-    with st.sidebar:
-        st.markdown('<div class="desktop-sidebar">', unsafe_allow_html=True)
-        api_key_sidebar, model_choice_sidebar, user_text_sidebar = render_settings_section()
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    # ── 移动端：主页面设置 ──
-    st.markdown('<div class="mobile-settings">', unsafe_allow_html=True)
-    api_key_mobile, model_choice_mobile, user_text_mobile = render_settings_section()
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # 根据设备类型选择正确的设置值
-    # Streamlit 会在服务器端渲染，我们需要同时获取两种设置
-    # 实际使用时，桌面端使用侧边栏值，移动端使用主页面值
-    # 这里采用合并策略：优先使用用户输入的值
-    
-    def merge_settings(sidebar_val, mobile_val):
-        """合并桌面端和移动端的设置值"""
-        if sidebar_val and str(sidebar_val).strip():
-            return sidebar_val
-        return mobile_val
-
-    api_key = merge_settings(api_key_sidebar if 'api_key_sidebar' in locals() else None, 
-                             api_key_mobile if 'api_key_mobile' in locals() else None)
-    model_choice = model_choice_sidebar if 'model_choice_sidebar' in locals() else model_choice_mobile
-    user_text = merge_settings(user_text_sidebar if 'user_text_sidebar' in locals() else None,
-                               user_text_mobile if 'user_text_mobile' in locals() else None)
-
     # ── 检查 API Key 是否配置 ──
     if not api_key:
         st.markdown(
@@ -734,36 +691,36 @@ def main():
         )
         st.stop()
 
-    # ── 主区域 ──
-    # 文件上传
-    with st.container():
-        col_upload, col_preview = st.columns([1, 1])
+    # ── 文件上传区域 ──
+    st.markdown("---")
+    st.markdown("### 📤 上传题目")
+    
+    # 使用单一列布局，避免移动端列冲突
+    uploaded_file = st.file_uploader(
+        "选择图片或 PDF 文件",
+        type=["jpg", "jpeg", "png", "gif", "webp", "pdf"],
+        help="支持 JPG、PNG、GIF、WebP 和 PDF 格式",
+        key="file_uploader",
+    )
 
-        with col_upload:
-            st.markdown("### 📤 上传题目")
-            uploaded_file = st.file_uploader(
-                "选择图片或 PDF 文件",
-                type=["jpg", "jpeg", "png", "gif", "webp", "pdf"],
-                label_visibility="collapsed",
+    # ── 题目预览 ──
+    if uploaded_file is not None:
+        st.markdown("#### 📷 题目预览")
+        if uploaded_file.type.startswith("image/"):
+            st.image(uploaded_file, use_container_width=True)
+        elif uploaded_file.type == "application/pdf":
+            st.markdown(
+                '<div class="question-preview">📄 已上传 PDF 文件，点击下方按钮开始分析</div>',
+                unsafe_allow_html=True,
             )
-
-            if uploaded_file is None:
-                st.markdown(
-                    '<div class="upload-hint">👆 点击上方按钮上传题目图片</div>',
-                    unsafe_allow_html=True,
-                )
-
-        with col_preview:
-            if uploaded_file is not None:
-                if uploaded_file.type.startswith("image/"):
-                    st.image(uploaded_file, caption="题目预览", use_container_width=True)
-                elif uploaded_file.type == "application/pdf":
-                    st.markdown(
-                        '<div class="question-preview">📄 已上传 PDF 文件</div>',
-                        unsafe_allow_html=True,
-                    )
+    else:
+        st.markdown(
+            '<div class="upload-hint">👆 点击上方按钮上传题目图片或 PDF 文件</div>',
+            unsafe_allow_html=True,
+        )
 
     # ── 分析按钮 ──
+    st.markdown("")  # 添加间距
     analyze_clicked = st.button(
         "🚀 开始分析",
         type="primary",
