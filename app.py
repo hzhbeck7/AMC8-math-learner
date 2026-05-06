@@ -2,6 +2,7 @@
 AMC 8 智学助手 —— 风趣幽默的数学竞赛教练
 技术栈: Streamlit + Google Gemini API (Vision)
 部署: Streamlit Cloud（支持多用户，API Key 通过侧边栏输入或 st.secrets 配置）
+特性: 移动端优化（响应式布局、图片自适应、字体适配）
 """
 
 import streamlit as st
@@ -38,17 +39,42 @@ st.set_page_config(
     page_title="AMC 8 智学助手",
     page_icon="🧠",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",  # 移动端默认折叠侧边栏
 )
 
 # ──────────────────────────────────────────────
-# 自定义 CSS —— 讲义风格
+# 自定义 CSS —— 讲义风格 + 移动端优化
 # ──────────────────────────────────────────────
 CUSTOM_CSS = """
 <style>
-    /* 全局字体 */
+    /* 全局字体 - 移动端适配 */
     .stApp {
         font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        font-size: 16px;
+    }
+    
+    /* 移动端字体大小调整 */
+    @media screen and (max-width: 768px) {
+        .stApp {
+            font-size: 15px;
+        }
+        .app-title h1 {
+            font-size: 1.8rem !important;
+        }
+        .app-title p {
+            font-size: 0.95rem !important;
+        }
+        .card-title {
+            font-size: 1.1rem !important;
+        }
+        .card-body {
+            font-size: 0.95rem !important;
+            line-height: 1.7 !important;
+        }
+        .module-card {
+            padding: 1rem 1.2rem !important;
+            margin-bottom: 0.8rem !important;
+        }
     }
 
     /* 标题区域 */
@@ -136,6 +162,57 @@ CUSTOM_CSS = """
         margin-bottom: 0.4rem;
     }
 
+    /* 移动端列表缩进调整 */
+    @media screen and (max-width: 768px) {
+        .card-body ol, .card-body ul {
+            padding-left: 1.2rem;
+        }
+    }
+
+    /* 图片居中自适应 */
+    .question-preview {
+        background: #f9fafb;
+        border: 1px dashed #d1d5db;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .question-preview img {
+        max-width: 100%;
+        max-height: 400px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin: 0 auto;
+        display: block;
+    }
+    
+    /* 移动端图片优化 */
+    @media screen and (max-width: 768px) {
+        .question-preview {
+            padding: 0.8rem;
+        }
+        .question-preview img {
+            max-height: 300px;
+            width: auto;
+            max-width: 100%;
+        }
+    }
+
+    /* Streamlit 原生图片组件居中 */
+    [data-testid="stImage"] {
+        display: flex;
+        justify-content: center;
+    }
+    [data-testid="stImage"] img {
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
     /* 侧边栏美化 */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
@@ -183,19 +260,14 @@ CUSTOM_CSS = """
         text-align: center;
     }
 
-    /* 题目预览 */
-    .question-preview {
-        background: #f9fafb;
-        border: 1px dashed #d1d5db;
-        border-radius: 12px;
-        padding: 1rem;
-        text-align: center;
-    }
-    .question-preview img {
-        max-width: 100%;
-        max-height: 400px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    /* 移动端提示框内边距调整 */
+    @media screen and (max-width: 768px) {
+        .success-banner,
+        .error-banner,
+        .warning-banner {
+            padding: 0.8rem 1rem;
+            font-size: 0.9rem;
+        }
     }
 
     /* 加载动画 */
@@ -214,6 +286,66 @@ CUSTOM_CSS = """
         padding: 1.5rem 0;
         border-top: 1px solid #e5e7eb;
         margin-top: 2rem;
+    }
+
+    /* 设置区域样式 */
+    .settings-section {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border: 1px solid #e2e8f0;
+    }
+    
+    @media screen and (max-width: 768px) {
+        .settings-section {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+        }
+    }
+
+    /* 步骤指示器移动端优化 */
+    @media screen and (max-width: 768px) {
+        .step-indicator {
+            padding: 1rem 0.5rem !important;
+        }
+        .step-indicator h3 {
+            font-size: 1rem !important;
+        }
+        .step-indicator p {
+            font-size: 0.85rem !important;
+        }
+    }
+
+    /* 按钮移动端优化 */
+    @media screen and (max-width: 768px) {
+        .stButton > button {
+            font-size: 1rem !important;
+            padding: 0.6rem 1.2rem !important;
+        }
+    }
+
+    /* 输入框移动端优化 */
+    @media screen and (max-width: 768px) {
+        .stTextInput > div > div > input,
+        .stTextArea > div > div > textarea {
+            font-size: 16px !important; /* 防止 iOS 缩放 */
+        }
+    }
+
+    /* 下拉选择器移动端优化 */
+    @media screen and (max-width: 768px) {
+        .stSelectbox > div > div > div {
+            font-size: 16px !important;
+        }
+    }
+
+    /* 文件上传区域移动端优化 */
+    @media screen and (max-width: 768px) {
+        [data-testid="stFileUploader"] {
+            font-size: 0.9rem;
+        }
     }
 </style>
 """
@@ -463,6 +595,77 @@ def simple_markdown_to_html(text: str) -> str:
 
 
 # ══════════════════════════════════════════════
+# 设置区域组件（用于侧边栏或主页面）
+# ══════════════════════════════════════════════
+
+def render_settings_section():
+    """渲染设置区域，返回 (api_key, model_choice, user_text)"""
+    st.markdown('<div class="settings-section">', unsafe_allow_html=True)
+    st.markdown("### ⚙️ 设置")
+
+    # API Key 输入（用户优先）
+    user_api_key = st.text_input(
+        "请输入您的 Gemini API Key",
+        type="password",
+        placeholder="AI...",
+        help="您的 API Key 仅在当前会话有效，不会被存储到服务器",
+    )
+
+    # 优先级逻辑：用户输入 > st.secrets
+    if user_api_key and user_api_key.strip():
+        api_key = user_api_key.strip()
+        st.success("✅ 使用您输入的 API Key", icon="🔑")
+    else:
+        # 尝试读取 st.secrets
+        try:
+            api_key = st.secrets["GEMINI_API_KEY"]
+            st.success("✅ 使用服务器配置的 API Key", icon="🔒")
+        except KeyError:
+            api_key = None
+            st.warning("⚠️ 未配置 API Key", icon="⚠️")
+
+    st.markdown("---")
+
+    # 模型选择
+    model_choice = st.selectbox(
+        "🤖 模型",
+        [
+            "gemini-2.0-flash",
+            "gemini-2.5-flash-preview-05-20",
+            "gemini-3-flash-preview",
+            "gemini-3.1-pro-preview",
+            "gemini-1.5-pro",
+            "gemini-1.5-flash",
+        ],
+        index=0,
+        help="gemini-2.0-flash 稳定免费；gemini-3 系列推理能力更强",
+    )
+
+    st.markdown("---")
+
+    # 附加说明
+    user_text = st.text_area(
+        "✏️ 补充说明（可选）",
+        placeholder="例如：这道题我不理解第 2 步...",
+        height=100,
+        help="可以补充你对这道题的疑问",
+    )
+
+    st.markdown(
+        """
+        <div style="font-size:0.85rem;color:#6b7280;margin-top:1rem;">
+            <p>📌 <strong>支持格式：</strong>JPG / PNG / PDF</p>
+            <p>📌 <strong>隐私说明：</strong>图片仅发送至 Google Gemini API，不会存储</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    return api_key, model_choice, user_text
+
+
+# ══════════════════════════════════════════════
 # 主界面
 # ══════════════════════════════════════════════
 
@@ -478,74 +681,56 @@ def main():
         unsafe_allow_html=True,
     )
 
-    # ── 侧边栏 ──
+    # ── 桌面端：侧边栏设置 ──
+    # 使用 CSS 媒体查询检测屏幕宽度，在移动端隐藏侧边栏内容
+    st.markdown(
+        """
+        <style>
+        /* 桌面端显示侧边栏 */
+        @media screen and (min-width: 769px) {
+            .mobile-settings { display: none !important; }
+        }
+        /* 移动端隐藏侧边栏内容，显示主页面设置 */
+        @media screen and (max-width: 768px) {
+            .desktop-sidebar { display: none !important; }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # 桌面端侧边栏
     with st.sidebar:
-        st.markdown("## ⚙️ 设置")
+        st.markdown('<div class="desktop-sidebar">', unsafe_allow_html=True)
+        api_key_sidebar, model_choice_sidebar, user_text_sidebar = render_settings_section()
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        # API Key 输入（用户优先）
-        user_api_key = st.text_input(
-            "请输入您的 Gemini API Key",
-            type="password",
-            placeholder="AI...",
-            help="您的 API Key 仅在当前会话有效，不会被存储到服务器",
-        )
+    # ── 移动端：主页面设置 ──
+    st.markdown('<div class="mobile-settings">', unsafe_allow_html=True)
+    api_key_mobile, model_choice_mobile, user_text_mobile = render_settings_section()
+    st.markdown('</div>', unsafe_allow_html=True)
 
-        # 优先级逻辑：用户输入 > st.secrets
-        if user_api_key and user_api_key.strip():
-            api_key = user_api_key.strip()
-            st.success("✅ 使用您输入的 API Key", icon="🔑")
-        else:
-            # 尝试读取 st.secrets
-            try:
-                api_key = st.secrets["GEMINI_API_KEY"]
-                st.success("✅ 使用服务器配置的 API Key", icon="🔒")
-            except KeyError:
-                api_key = None
-                st.warning("⚠️ 未配置 API Key", icon="⚠️")
+    # 根据设备类型选择正确的设置值
+    # Streamlit 会在服务器端渲染，我们需要同时获取两种设置
+    # 实际使用时，桌面端使用侧边栏值，移动端使用主页面值
+    # 这里采用合并策略：优先使用用户输入的值
+    
+    def merge_settings(sidebar_val, mobile_val):
+        """合并桌面端和移动端的设置值"""
+        if sidebar_val and str(sidebar_val).strip():
+            return sidebar_val
+        return mobile_val
 
-        st.markdown("---")
-
-        # 模型选择
-        model_choice = st.selectbox(
-            "🤖 模型",
-            [
-                "gemini-2.0-flash",
-                "gemini-2.5-flash-preview-05-20",
-                "gemini-3-flash-preview",
-                "gemini-3.1-pro-preview",
-                "gemini-1.5-pro",
-                "gemini-1.5-flash",
-            ],
-            index=0,
-            help="gemini-2.0-flash 稳定免费；gemini-3 系列推理能力更强",
-        )
-
-        st.markdown("---")
-
-        # 附加说明
-        user_text = st.text_area(
-            "✏️ 补充说明（可选）",
-            placeholder="例如：这道题我不理解第 2 步...",
-            height=100,
-            help="可以补充你对这道题的疑问",
-        )
-
-        st.markdown("---")
-        st.markdown(
-            """
-            <div style="font-size:0.85rem;color:#6b7280;">
-                <p>📌 <strong>支持格式：</strong>JPG / PNG / PDF</p>
-                <p>📌 <strong>使用方法：</strong>上传题目图片，点击"开始分析"</p>
-                <p>📌 <strong>隐私说明：</strong>图片仅发送至 Google Gemini API，不会存储</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+    api_key = merge_settings(api_key_sidebar if 'api_key_sidebar' in locals() else None, 
+                             api_key_mobile if 'api_key_mobile' in locals() else None)
+    model_choice = model_choice_sidebar if 'model_choice_sidebar' in locals() else model_choice_mobile
+    user_text = merge_settings(user_text_sidebar if 'user_text_sidebar' in locals() else None,
+                               user_text_mobile if 'user_text_mobile' in locals() else None)
 
     # ── 检查 API Key 是否配置 ──
     if not api_key:
         st.markdown(
-            '<div class="warning-banner">⚠️ 请在左侧填入 API Key 后再开始解题</div>',
+            '<div class="warning-banner">⚠️ 请在上方填入 API Key 后再开始解题</div>',
             unsafe_allow_html=True,
         )
         st.stop()
@@ -663,7 +848,7 @@ def main():
         with col1:
             st.markdown(
                 """
-                <div style="text-align:center;padding:2rem;">
+                <div class="step-indicator" style="text-align:center;padding:2rem;">
                     <div style="font-size:3rem;">📸</div>
                     <h3 style="color:#374151;">第一步</h3>
                     <p style="color:#6b7280;">上传题目图片或 PDF</p>
@@ -674,7 +859,7 @@ def main():
         with col2:
             st.markdown(
                 """
-                <div style="text-align:center;padding:2rem;">
+                <div class="step-indicator" style="text-align:center;padding:2rem;">
                     <div style="font-size:3rem;">🤖</div>
                     <h3 style="color:#374151;">第二步</h3>
                     <p style="color:#6b7280;">AI 教练智能识别与分析</p>
@@ -685,7 +870,7 @@ def main():
         with col3:
             st.markdown(
                 """
-                <div style="text-align:center;padding:2rem;">
+                <div class="step-indicator" style="text-align:center;padding:2rem;">
                     <div style="font-size:3rem;">📝</div>
                     <h3 style="color:#374151;">第三步</h3>
                     <p style="color:#6b7280;">获得精美讲义式讲解</p>
