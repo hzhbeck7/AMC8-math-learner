@@ -338,22 +338,19 @@ def call_gemini(api_key: str, image_bytes: bytes, mime_type: str,
         raise RuntimeError("需要安装 google-generativeai")
 
     genai.configure(api_key=api_key)
-    model_instance = genai.GenerativeModel(model)
 
-    # 构建用户消息（图片 + 文字合并为一条消息）
+    # 使用 system_instruction 参数传递人设（推荐方式）
+    model_instance = genai.GenerativeModel(
+        model,
+        system_instruction=SYSTEM_PROMPT,
+    )
+
+    # 构建用户消息
     user_parts = []
     if user_text.strip():
         user_parts.append(f"学生补充：{user_text.strip()}\n\n")
     user_parts.append({"mime_type": mime_type, "data": image_bytes})
     user_parts.append("来，用你幽默的风格讲讲这道题！")
-
-    # 使用标准 Content 结构
-    from google.generativeai.types import Content, Part
-    contents = [
-        Content(role="user", parts=[Part.from_text(SYSTEM_PROMPT)]),
-        Content(role="model", parts=[Part.from_text("收到！我是你的幽默数学教练，请上传题目吧！")]),
-        Content(role="user", parts=user_parts),
-    ]
 
     generation_config = {
         "temperature": 0.8,
@@ -366,19 +363,17 @@ def call_gemini(api_key: str, image_bytes: bytes, mime_type: str,
     for attempt in range(3):
         try:
             response = model_instance.generate_content(
-                contents,
+                user_parts,
                 generation_config=generation_config,
             )
             return response.text
         except Exception as e:
             last_error = e
             error_msg = str(e).lower()
-            # 500 错误等待后重试
             if "500" in error_msg or "internal" in error_msg:
                 wait_time = (attempt + 1) * 3
                 time.sleep(wait_time)
                 continue
-            # 其他错误直接抛出
             raise
     
     raise last_error
