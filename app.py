@@ -1,20 +1,22 @@
 """
 AMC 8 智学助手 —— 风趣幽默的数学竞赛教练
-技术栈: Streamlit + Google Gemini API (Vision)
-部署: Streamlit Cloud（支持多用户，API Key 通过侧边栏输入或 st.secrets 配置）
-特性: 移动端优化（响应式布局、图片自适应、字体适配）
+技术栈: Streamlit + Google Gemini API (Vision) + edge-tts (语音)
+部署: Streamlit Cloud
+特性: 移动端优化、语音朗读、幽默名师人设
 """
 
 import streamlit as st
 import base64
-import json
 import re
-import sys
 import io
+import asyncio
+import tempfile
+import os
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
 
 # ──────────────────────────────────────────────
-# PDF 处理依赖（可选，仅在用户上传 PDF 时需要）
+# PDF 处理依赖
 # ──────────────────────────────────────────────
 try:
     from pdf2image import convert_from_bytes
@@ -33,6 +35,15 @@ except ImportError:
     GEMINI_AVAILABLE = False
 
 # ──────────────────────────────────────────────
+# 语音合成依赖
+# ──────────────────────────────────────────────
+try:
+    import edge_tts
+    EDGE_TTS_AVAILABLE = True
+except ImportError:
+    EDGE_TTS_AVAILABLE = False
+
+# ──────────────────────────────────────────────
 # 页面配置
 # ──────────────────────────────────────────────
 st.set_page_config(
@@ -43,41 +54,21 @@ st.set_page_config(
 )
 
 # ──────────────────────────────────────────────
-# 自定义 CSS —— 讲义风格 + 移动端优化
+# 自定义 CSS
 # ──────────────────────────────────────────────
 CUSTOM_CSS = """
 <style>
-    /* 全局字体 - 移动端适配 */
     .stApp {
         font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
         font-size: 16px;
     }
     
-    /* 移动端字体大小调整 */
     @media screen and (max-width: 768px) {
-        .stApp {
-            font-size: 15px;
-        }
-        .app-title h1 {
-            font-size: 1.8rem !important;
-        }
-        .app-title p {
-            font-size: 0.95rem !important;
-        }
-        .card-title {
-            font-size: 1.1rem !important;
-        }
-        .card-body {
-            font-size: 0.95rem !important;
-            line-height: 1.7 !important;
-        }
-        .module-card {
-            padding: 1rem 1.2rem !important;
-            margin-bottom: 0.8rem !important;
-        }
+        .stApp { font-size: 15px; }
+        .app-title h1 { font-size: 1.8rem !important; }
+        .app-title p { font-size: 0.95rem !important; }
     }
 
-    /* 标题区域 */
     .app-title {
         text-align: center;
         padding: 1.2rem 0 0.5rem 0;
@@ -95,6 +86,26 @@ CUSTOM_CSS = """
         color: #6b7280;
     }
 
+    /* 语音按钮样式 */
+    .voice-btn {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.95rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0.5rem 0;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .voice-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+    }
+
     /* 模块卡片 */
     .module-card {
         background: #ffffff;
@@ -103,46 +114,21 @@ CUSTOM_CSS = """
         margin-bottom: 1.2rem;
         box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         border-left: 5px solid;
-        transition: transform 0.2s, box-shadow 0.2s;
     }
-    .module-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    
+    @media screen and (max-width: 768px) {
+        .module-card {
+            padding: 1rem 1.2rem !important;
+            margin-bottom: 0.8rem !important;
+        }
     }
 
-    /* 数学小剧场 —— 橙色 */
-    .card-theater {
-        border-left-color: #f59e0b;
-        background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
-    }
-    .card-theater .card-icon { color: #f59e0b; }
+    .card-theater { border-left-color: #f59e0b; background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%); }
+    .card-knowledge { border-left-color: #3b82f6; background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); }
+    .card-steps { border-left-color: #10b981; background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%); }
+    .card-bonus { border-left-color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 100%); }
 
-    /* 核心知识点 —— 蓝色 */
-    .card-knowledge {
-        border-left-color: #3b82f6;
-        background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
-    }
-    .card-knowledge .card-icon { color: #3b82f6; }
-
-    /* 步进式解法 —— 绿色 */
-    .card-steps {
-        border-left-color: #10b981;
-        background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
-    }
-    .card-steps .card-icon { color: #10b981; }
-
-    /* 衍生思考 —— 紫色 */
-    .card-bonus {
-        border-left-color: #8b5cf6;
-        background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 100%);
-    }
-    .card-bonus .card-icon { color: #8b5cf6; }
-
-    .card-icon {
-        font-size: 1.6rem;
-        margin-right: 0.5rem;
-        vertical-align: middle;
-    }
+    .card-icon { font-size: 1.6rem; margin-right: 0.5rem; }
     .card-title {
         font-size: 1.25rem;
         font-weight: 700;
@@ -155,132 +141,8 @@ CUSTOM_CSS = """
         line-height: 1.85;
         color: #374151;
     }
-    .card-body ol, .card-body ul {
-        padding-left: 1.5rem;
-    }
-    .card-body li {
-        margin-bottom: 0.4rem;
-    }
 
-    /* 移动端列表缩进调整 */
-    @media screen and (max-width: 768px) {
-        .card-body ol, .card-body ul {
-            padding-left: 1.2rem;
-        }
-    }
-
-    /* 图片居中自适应 */
-    .question-preview {
-        background: #f9fafb;
-        border: 1px dashed #d1d5db;
-        border-radius: 12px;
-        padding: 1rem;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-    .question-preview img {
-        max-width: 100%;
-        max-height: 400px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        margin: 0 auto;
-        display: block;
-    }
-    
-    /* 移动端图片优化 */
-    @media screen and (max-width: 768px) {
-        .question-preview {
-            padding: 0.8rem;
-        }
-        .question-preview img {
-            max-height: 300px;
-            width: auto;
-            max-width: 100%;
-        }
-    }
-
-    /* Streamlit 原生图片组件居中 */
-    [data-testid="stImage"] {
-        display: flex;
-        justify-content: center;
-    }
-    [data-testid="stImage"] img {
-        max-width: 100%;
-        height: auto;
-        margin: 0 auto;
-    }
-
-    /* 上传区域 */
-    .upload-hint {
-        text-align: center;
-        color: #9ca3af;
-        font-size: 0.9rem;
-        padding: 0.5rem;
-    }
-
-    /* 成功提示 */
-    .success-banner {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-        border: 1px solid #6ee7b7;
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        color: #065f46;
-        text-align: center;
-        font-weight: 600;
-    }
-
-    /* 错误提示 */
-    .error-banner {
-        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-        border: 1px solid #fca5a5;
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        color: #991b1b;
-        text-align: center;
-    }
-
-    /* 警告提示 */
-    .warning-banner {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        border: 1px solid #fbbf24;
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        color: #92400e;
-        text-align: center;
-    }
-
-    /* 移动端提示框内边距调整 */
-    @media screen and (max-width: 768px) {
-        .success-banner,
-        .error-banner,
-        .warning-banner {
-            padding: 0.8rem 1rem;
-            font-size: 0.9rem;
-        }
-    }
-
-    /* 加载动画 */
-    .loading-text {
-        text-align: center;
-        color: #6b7280;
-        font-size: 1.1rem;
-        padding: 2rem;
-    }
-
-    /* 页脚 */
-    .footer {
-        text-align: center;
-        color: #9ca3af;
-        font-size: 0.85rem;
-        padding: 1.5rem 0;
-        border-top: 1px solid #e5e7eb;
-        margin-top: 2rem;
-    }
-
-    /* 设置区域样式 */
+    /* 设置区域 */
     .settings-section {
         background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         border-radius: 16px;
@@ -293,67 +155,50 @@ CUSTOM_CSS = """
         .settings-section {
             padding: 1rem;
             margin: 1rem 0;
-            border-radius: 12px;
         }
     }
 
-    /* 步骤指示器移动端优化 */
-    @media screen and (max-width: 768px) {
-        .step-indicator {
-            padding: 1rem 0.5rem !important;
-        }
-        .step-indicator h3 {
-            font-size: 1rem !important;
-        }
-        .step-indicator p {
-            font-size: 0.85rem !important;
-        }
-    }
-
-    /* 按钮移动端优化 */
-    @media screen and (max-width: 768px) {
-        .stButton > button {
-            font-size: 1rem !important;
-            padding: 0.6rem 1.2rem !important;
-        }
-    }
-
-    /* 输入框移动端优化 - 防止 iOS 缩放 */
-    @media screen and (max-width: 768px) {
-        .stTextInput > div > div > input,
-        .stTextArea > div > div > textarea {
-            font-size: 16px !important;
-        }
-    }
-
-    /* 下拉选择器移动端优化 */
-    @media screen and (max-width: 768px) {
-        .stSelectbox > div > div > div {
-            font-size: 16px !important;
-        }
-    }
-
-    /* 文件上传区域移动端优化 */
-    @media screen and (max-width: 768px) {
-        [data-testid="stFileUploader"] {
-            font-size: 0.9rem;
-        }
-        [data-testid="stFileUploader"] section {
-            padding: 1rem !important;
-        }
-    }
-
-    /* 隐藏 Streamlit 默认的文件上传区域样式，使其更紧凑 */
-    [data-testid="stFileUploader"] section {
-        padding: 1.5rem;
+    /* 提示横幅 */
+    .success-banner {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        border: 1px solid #6ee7b7;
         border-radius: 12px;
+        padding: 1rem 1.5rem;
+        color: #065f46;
+        text-align: center;
+        font-weight: 600;
     }
-    
-    /* 上传成功后的文件信息样式 */
-    [data-testid="stFileUploader"] details {
-        background: #f0fdf4;
-        border-radius: 8px;
-        margin-top: 0.5rem;
+    .error-banner {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        border: 1px solid #fca5a5;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        color: #991b1b;
+        text-align: center;
+    }
+    .warning-banner {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border: 1px solid #fbbf24;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        color: #92400e;
+        text-align: center;
+    }
+
+    .footer {
+        text-align: center;
+        color: #9ca3af;
+        font-size: 0.85rem;
+        padding: 1.5rem 0;
+        border-top: 1px solid #e5e7eb;
+        margin-top: 2rem;
+    }
+
+    /* 聊天消息样式 */
+    [data-testid="stChatMessage"] {
+        background: #ffffff;
+        border-radius: 12px;
+        margin-bottom: 0.5rem;
     }
 </style>
 """
@@ -366,13 +211,9 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 # ══════════════════════════════════════════════
 
 def pdf_to_images(pdf_bytes: bytes) -> list:
-    """将 PDF 转换为图片列表（每页一张）"""
+    """将 PDF 转换为图片列表"""
     if not PDF_SUPPORT:
-        raise RuntimeError(
-            "PDF 支持需要安装 pdf2image 和 poppler。\n"
-            "请运行: pip install pdf2image\n"
-            "并确保系统已安装 poppler-utils。"
-        )
+        raise RuntimeError("PDF 支持需要安装 pdf2image 和 poppler")
     images = convert_from_bytes(pdf_bytes, dpi=200)
     result = []
     for img in images:
@@ -386,60 +227,103 @@ def get_mime_type(filename: str) -> str:
     """根据文件扩展名返回 MIME 类型"""
     ext = Path(filename).suffix.lower()
     mime_map = {
-        ".jpg": "image/jpeg",
-        ".jpeg": "image/jpeg",
-        ".png": "image/png",
-        ".gif": "image/gif",
-        ".webp": "image/webp",
-        ".bmp": "image/bmp",
+        ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
+        ".gif": "image/gif", ".webp": "image/webp", ".bmp": "image/bmp",
     }
     return mime_map.get(ext, "image/png")
 
 
 # ══════════════════════════════════════════════
-# Prompt 工程
+# 语音合成函数
+# ══════════════════════════════════════════════
+
+async def generate_voice_async(text: str, voice: str = "zh-CN-YunxiNeural") -> bytes:
+    """异步生成语音"""
+    if not EDGE_TTS_AVAILABLE:
+        raise RuntimeError("需要安装 edge-tts 库")
+    
+    communicate = edge_tts.Communicate(text, voice)
+    
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
+        tmp_path = tmp_file.name
+    
+    try:
+        await communicate.save(tmp_path)
+        with open(tmp_path, "rb") as f:
+            audio_bytes = f.read()
+        return audio_bytes
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+
+
+def generate_voice(text: str, voice: str = "zh-CN-YunxiNeural") -> bytes:
+    """同步包装异步语音生成"""
+    return asyncio.run(generate_voice_async(text, voice))
+
+
+def play_voice_button(text: str, key: str):
+    """显示语音播放按钮"""
+    if not EDGE_TTS_AVAILABLE:
+        st.warning("语音功能需要安装 edge-tts")
+        return
+    
+    # 使用线程池在后台生成语音
+    with ThreadPoolExecutor() as executor:
+        future = executor.submit(generate_voice, text)
+        
+        if st.button(f"🔊 听听教练怎么说", key=f"voice_{key}"):
+            with st.spinner("正在生成语音..."):
+                try:
+                    audio_bytes = future.result(timeout=30)
+                    st.audio(audio_bytes, format="audio/mp3")
+                except Exception as e:
+                    st.error(f"语音生成失败: {e}")
+
+
+# ══════════════════════════════════════════════
+# Prompt 工程 - 幽默名师人设
 # ══════════════════════════════════════════════
 
 SYSTEM_PROMPT = """\
-你是一位风趣幽默、知识渊博的 AMC 8 数学竞赛教练。你的教学风格生动活泼，善于用类比和故事激发学生的数学兴趣。
+你是一位极其幽默、接地气的 AMC 8 数学竞赛教练，绰号"数学段子手"。你的教学风格就像脱口秀演员讲数学，能把枯燥的公式变成有趣的故事。
 
-当学生上传一道 AMC 8 数学题（图片或文字）后，你必须严格按照以下四个模块输出内容。每个模块必须用对应的标题标记。
+## 你的说话风格：
+- 大量使用接地气的比喻（比如：把勾股定理叫做三角形的"铁三角"关系，把因数分解叫做"数学拆快递"）
+- 每道题必须加入 1-2 句冷笑话或幽默鼓励
+- 用网络流行语和学生打成一片
+- 偶尔自黑，展现亲和力
 
 ## 输出格式要求
 
 ### 🎭 数学小剧场
-- 讲一个与本题知识点相关的数学历史故事、数学家轶事或生活中的趣味应用。
-- 语言生动有趣，像讲故事一样，控制在 150 字以内。
-- 目的：激发学习兴趣，让学生感受到数学的魅力。
+- 讲一个与知识点相关的趣味故事或数学家八卦，控制在 150 字以内
+- 必须包含至少一个段子或冷笑话
+- 示例风格："话说毕达哥拉斯当年发现勾股定理的时候，据说杀了100头牛庆祝。要是我，可能只杀一头——毕竟现在牛肉挺贵的..."
 
 ### 🎯 核心知识点
-- 用简洁的要点列表总结本题考查的 AMC 8 核心考点（2-5 个）。
-- 每个考点用一句话概括，并简要说明为什么这个考点重要。
-- 如果涉及公式，请用清晰的方式呈现。
+- 用大白话总结考点，避免术语堆砌
+- 每个知识点配一个接地气的比喻
+- 示例："这题考的是质因数分解，说白了就是给数字'拆快递'，看看里面装了多少个2、3、5..."
 
 ### 🧩 步进式解法
-- 分步骤展示解题逻辑，每一步都要有**引导性的提问**（用 ❓ 标记），引导学生主动思考。
-- 不要直接给出最终答案，而是通过层层递进的提问让学生自己推导。
-- 每一步之间要有逻辑衔接，像教练在旁边一步步引导学生。
-- 格式示例：
-  **第一步：观察与发现**
-  ❓ 你注意到题目中有什么特殊的数字或关系吗？
-  → 引导分析...
-
-  **第二步：建立联系**
-  ❓ 如果我们把...和...联系起来，会发现什么规律？
-  → 推导过程...
+- 每步都要有引导性提问（用 ❓ 标记）
+- 穿插幽默点评和鼓励
+- 必须包含至少一句冷笑话或鼓励，例如：
+  * "这步你要是做对了，我看你离数学家高斯也就差两斤头发的距离了"
+  * "别慌，这题比你的前任简单多了"
+  * "相信自己，你的脑细胞正在开派对呢"
+  * "错一次没关系，爱因斯坦小时候数学还考过1分呢（虽然后来证明是谣言）"
 
 ### 💡 衍生思考
-- 给出一道类似思路的变式题（不需要解答，只给题目）。
-- 简要说明这道变式题与原题的关联，帮助学生举一反三。
+- 给出一道变式题
+- 用轻松语气说明关联
 
 ## 注意事项
-- 全程使用中文回答。
-- 语气亲切自然，像一位经验丰富的教练在和学生对话。
-- 如果图片模糊或无法识别，请诚实告知并建议学生重新上传。
-- 如果上传的不是数学题，请幽默地提醒学生"教练只教数学哦～"。
-- 数学公式请用清晰的文本格式呈现，避免使用 LaTeX 代码。
+- 全程中文，语气像朋友聊天
+- 数学公式用通俗文字表达
+- 如果识别失败，幽默地吐槽图片质量
+- 如果不是数学题，开玩笑说自己"只会教数学，不会算命"
 """
 
 
@@ -447,38 +331,23 @@ SYSTEM_PROMPT = """\
 # Gemini API 调用
 # ══════════════════════════════════════════════
 
-def call_gemini(api_key: str, image_bytes: bytes, mime_type: str, model: str = "gemini-2.5-flash", user_text: str = "") -> str:
-    """
-    调用 Google Gemini API 分析数学题并生成结构化讲解。
-    """
+def call_gemini(api_key: str, image_bytes: bytes, mime_type: str, 
+                model: str = "gemini-2.5-flash", user_text: str = "") -> str:
+    """调用 Gemini API"""
     if not GEMINI_AVAILABLE:
-        raise RuntimeError(
-            "需要安装 google-generativeai 库。请运行: pip install google-generativeai"
-        )
+        raise RuntimeError("需要安装 google-generativeai")
 
-    # 配置 API Key
     genai.configure(api_key=api_key)
-
-    # 创建模型实例
     model_instance = genai.GenerativeModel(model)
 
-    # 构建提示词
     prompt_parts = [SYSTEM_PROMPT]
-
-    # 添加用户补充说明
     if user_text.strip():
-        prompt_parts.append(f"学生补充说明：{user_text.strip()}")
+        prompt_parts.append(f"学生补充：{user_text.strip()}")
 
-    # 添加图片
-    image_part = {
-        "mime_type": mime_type,
-        "data": image_bytes
-    }
+    image_part = {"mime_type": mime_type, "data": image_bytes}
     prompt_parts.append(image_part)
+    prompt_parts.append("来，用你幽默的风格讲讲这道题！")
 
-    prompt_parts.append("请分析这道 AMC 8 数学题，并按照四个模块输出讲解内容。")
-
-    # 配置安全设置（降低安全阈值以允许更多内容）
     safety_settings = {
         HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
@@ -486,19 +355,13 @@ def call_gemini(api_key: str, image_bytes: bytes, mime_type: str, model: str = "
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
     }
 
-    # 配置生成参数
-    generation_config = {
-        "temperature": 0.7,
-        "max_output_tokens": 4096,
-    }
+    generation_config = {"temperature": 0.8, "max_output_tokens": 4096}
 
-    # 调用 API
     response = model_instance.generate_content(
         prompt_parts,
         generation_config=generation_config,
         safety_settings=safety_settings,
     )
-
     return response.text
 
 
@@ -506,100 +369,99 @@ def call_gemini(api_key: str, image_bytes: bytes, mime_type: str, model: str = "
 # 输出渲染
 # ══════════════════════════════════════════════
 
-def render_module(title: str, icon: str, body: str, card_class: str):
-    """渲染一个模块卡片"""
+def simple_markdown_to_html(text: str) -> str:
+    """Markdown 转 HTML"""
+    if not text:
+        return ""
+    text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+    text = re.sub(r'\*(.+?)\*', r'<em>\1</em>', text)
+    text = re.sub(r'`(.+?)`', r'<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;">\1</code>', text)
+    text = re.sub(r'^(\d+)\.\s+(.+)$', r'<li>\2</li>', text, flags=re.MULTILINE)
+    text = re.sub(r'(<li>.*</li>\n?)+', lambda m: '<ol>' + m.group(0) + '</ol>', text, flags=re.DOTALL)
+    text = re.sub(r'^[-*]\s+(.+)$', r'<li>\1</li>', text, flags=re.MULTILINE)
+    text = text.replace('\n', '<br>')
+    text = re.sub(r'<br>\s*<br>\s*<(ol|ul|li)', r'<\1', text)
+    text = re.sub(r'</(ol|ul)>\s*<br>', r'</\1>', text)
+    return text
+
+
+def render_module_with_voice(title: str, body: str, card_class: str, voice_key: str):
+    """渲染模块并添加语音按钮"""
+    # 清理文本用于语音（移除 HTML 标签）
+    clean_text = re.sub(r'<[^>]+>', '', body)
+    clean_text = clean_text.replace('<br>', ' ').replace('&nbsp;', ' ')
+    
     st.markdown(
         f"""
         <div class="module-card {card_class}">
-            <div class="card-title">
-                <span class="card-icon">{icon}</span>
-                {title}
-            </div>
-            <div class="card-body">
-                {body}
-            </div>
+            <div class="card-title">{title}</div>
+            <div class="card-body">{body}</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
+    
+    # 语音按钮
+    if EDGE_TTS_AVAILABLE and clean_text.strip():
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            if st.button(f"🔊 听教练说", key=f"btn_{voice_key}"):
+                with st.spinner("生成语音中..."):
+                    try:
+                        audio_bytes = generate_voice(clean_text[:1500])  # 限制长度
+                        st.audio(audio_bytes, format="audio/mp3")
+                    except Exception as e:
+                        st.error(f"语音失败: {e}")
 
 
-def parse_and_render(response_text: str):
-    """
-    解析 LLM 回复，按模块渲染为讲义卡片。
-    支持多种分隔格式：### 标题、## 标题、**标题** 等。
-    """
-    # 定义模块匹配规则（按优先级排序）
+def parse_and_render_with_voice(response_text: str):
+    """解析回复并渲染，带语音功能"""
     module_patterns = [
-        ("🎭 数学小剧场", "card-theater", [
+        ("🎭 数学小剧场", "card-theater", "theater", [
             r"###\s*[🎭🎭]*\s*数学小剧场\s*[🎭🎭]*\s*\n(.*?)(?=###\s*[🎯🎯]*\s*核心知识点|$)",
             r"##\s*[🎭🎭]*\s*数学小剧场\s*[🎭🎭]*\s*\n(.*?)(?=##\s*[🎯🎯]*\s*核心知识点|$)",
-            r"\*\*🎭\s*数学小剧场\*\*\s*\n(.*?)(?=\*\*🎯|$)",
         ]),
-        ("🎯 核心知识点", "card-knowledge", [
+        ("🎯 核心知识点", "card-knowledge", "knowledge", [
             r"###\s*[🎯🎯]*\s*核心知识点\s*[🎯🎯]*\s*\n(.*?)(?=###\s*[🧩🧩]*\s*步进式解法|$)",
             r"##\s*[🎯🎯]*\s*核心知识点\s*[🎯🎯]*\s*\n(.*?)(?=##\s*[🧩🧩]*\s*步进式解法|$)",
-            r"\*\*🎯\s*核心知识点\*\*\s*\n(.*?)(?=\*\*🧩|$)",
         ]),
-        ("🧩 步进式解法", "card-steps", [
+        ("🧩 步进式解法", "card-steps", "steps", [
             r"###\s*[🧩🧩]*\s*步进式解法\s*[🧩🧩]*\s*\n(.*?)(?=###\s*[💡💡]*\s*衍生思考|$)",
             r"##\s*[🧩🧩]*\s*步进式解法\s*[🧩🧩]*\s*\n(.*?)(?=##\s*[💡💡]*\s*衍生思考|$)",
-            r"\*\*🧩\s*步进式解法\*\*\s*\n(.*?)(?=\*\*💡|$)",
         ]),
-        ("💡 衍生思考", "card-bonus", [
+        ("💡 衍生思考", "card-bonus", "bonus", [
             r"###\s*[💡💡]*\s*衍生思考\s*[💡💡]*\s*\n(.*?)(?=$)",
             r"##\s*[💡💡]*\s*衍生思考\s*[💡💡]*\s*\n(.*?)(?=$)",
-            r"\*\*💡\s*衍生思考\*\*\s*\n(.*?)(?=$)",
         ]),
     ]
 
     modules_found = {}
-
-    for title, card_class, patterns in module_patterns:
+    
+    for title, card_class, key, patterns in module_patterns:
         for pattern in patterns:
             match = re.search(pattern, response_text, re.DOTALL | re.IGNORECASE)
             if match:
-                body = match.group(1).strip()
-                # 将 Markdown 转为 HTML（简单处理）
-                body = simple_markdown_to_html(body)
-                modules_found[title] = (card_class, body)
+                body = simple_markdown_to_html(match.group(1).strip())
+                modules_found[key] = (title, card_class, body)
                 break
 
-    # 如果解析失败，将整个回复作为单个模块显示
+    # 按顺序渲染（小剧场和解法带语音）
+    for key in ["theater", "knowledge", "steps", "bonus"]:
+        if key in modules_found:
+            title, card_class, body = modules_found[key]
+            if key in ["theater", "steps"]:
+                render_module_with_voice(title, body, card_class, key)
+            else:
+                st.markdown(
+                    f'<div class="module-card {card_class}"><div class="card-title">{title}</div><div class="card-body">{body}</div></div>',
+                    unsafe_allow_html=True,
+                )
+
     if not modules_found:
-        render_module("📋 讲解内容", "📋", simple_markdown_to_html(response_text), "card-theater")
-        return
-
-    # 按顺序渲染各模块
-    for title, card_class, _ in module_patterns:
-        if title in modules_found:
-            cls, body = modules_found[title]
-            render_module(title, "", body, cls)
-
-
-def simple_markdown_to_html(text: str) -> str:
-    """简单的 Markdown → HTML 转换（处理加粗、列表、换行等）"""
-    if not text:
-        return ""
-
-    # 加粗
-    text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
-    # 斜体
-    text = re.sub(r'\*(.+?)\*', r'<em>\1</em>', text)
-    # 行内代码
-    text = re.sub(r'`(.+?)`', r'<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;">\1</code>', text)
-    # 有序列表
-    text = re.sub(r'^(\d+)\.\s+(.+)$', r'<li>\2</li>', text, flags=re.MULTILINE)
-    text = re.sub(r'(<li>.*</li>\n?)+', lambda m: '<ol>' + m.group(0) + '</ol>', text, flags=re.DOTALL)
-    # 无序列表
-    text = re.sub(r'^[-*]\s+(.+)$', r'<li>\1</li>', text, flags=re.MULTILINE)
-    # 换行
-    text = text.replace('\n', '<br>')
-    # 清理多余 <br>
-    text = re.sub(r'<br>\s*<br>\s*<(ol|ul|li)', r'<\1', text)
-    text = re.sub(r'</(ol|ul)>\s*<br>', r'</\1>', text)
-
-    return text
+        st.markdown(
+            f'<div class="module-card card-theater"><div class="card-body">{simple_markdown_to_html(response_text)}</div></div>',
+            unsafe_allow_html=True,
+        )
 
 
 # ══════════════════════════════════════════════
@@ -607,36 +469,32 @@ def simple_markdown_to_html(text: str) -> str:
 # ══════════════════════════════════════════════
 
 def main():
-    # ── 标题 ──
+    # 标题
     st.markdown(
         """
         <div class="app-title">
             <h1>🧠 AMC 8 智学助手</h1>
-            <p>上传一道 AMC 8 数学题，你的专属竞赛教练即刻开讲！</p>
+            <p>你的幽默数学教练，让解题像听相声一样有趣！</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # ── 设置区域（统一放在主页面，桌面端和移动端共用）──
+    # 设置区域
     st.markdown('<div class="settings-section">', unsafe_allow_html=True)
     st.markdown("### ⚙️ 设置")
 
-    # API Key 输入（用户优先）
     user_api_key = st.text_input(
         "请输入您的 Gemini API Key",
         type="password",
         placeholder="AI...",
-        help="您的 API Key 仅在当前会话有效，不会被存储到服务器",
         key="api_key_input",
     )
 
-    # 优先级逻辑：用户输入 > st.secrets
     if user_api_key and user_api_key.strip():
         api_key = user_api_key.strip()
         st.success("✅ 使用您输入的 API Key", icon="🔑")
     else:
-        # 尝试读取 st.secrets
         try:
             api_key = st.secrets["GEMINI_API_KEY"]
             st.success("✅ 使用服务器配置的 API Key", icon="🔒")
@@ -646,81 +504,49 @@ def main():
 
     st.markdown("---")
 
-    # 模型选择
     model_choice = st.selectbox(
         "🤖 模型",
-        [
-            "gemini-2.5-flash",
-            "gemini-2.5-pro",
-            "gemini-2.5-flash-lite",
-            "gemini-1.5-pro",
-            "gemini-1.5-flash",
-        ],
+        ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.5-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash"],
         index=0,
-        help="gemini-2.5-flash 推荐，性价比高；gemini-2.5-pro 推理能力最强",
         key="model_select",
     )
 
     st.markdown("---")
 
-    # 附加说明
     user_text = st.text_area(
         "✏️ 补充说明（可选）",
         placeholder="例如：这道题我不理解第 2 步...",
         height=100,
-        help="可以补充你对这道题的疑问",
         key="user_text_input",
     )
 
-    st.markdown(
-        """
-        <div style="font-size:0.85rem;color:#6b7280;margin-top:1rem;">
-            <p>📌 <strong>支持格式：</strong>JPG / PNG / PDF</p>
-            <p>📌 <strong>隐私说明：</strong>图片仅发送至 Google Gemini API，不会存储</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ── 检查 API Key 是否配置 ──
     if not api_key:
-        st.markdown(
-            '<div class="warning-banner">⚠️ 请在上方填入 API Key 后再开始解题</div>',
-            unsafe_allow_html=True,
-        )
+        st.markdown('<div class="warning-banner">⚠️ 请在上方填入 API Key 后再开始解题</div>', unsafe_allow_html=True)
         st.stop()
 
-    # ── 文件上传区域 ──
+    # 文件上传
     st.markdown("---")
     st.markdown("### 📤 上传题目")
     
-    # 使用单一列布局，避免移动端列冲突
     uploaded_file = st.file_uploader(
         "选择图片或 PDF 文件",
         type=["jpg", "jpeg", "png", "gif", "webp", "pdf"],
-        help="支持 JPG、PNG、GIF、WebP 和 PDF 格式",
         key="file_uploader",
     )
 
-    # ── 题目预览 ──
     if uploaded_file is not None:
         st.markdown("#### 📷 题目预览")
         if uploaded_file.type.startswith("image/"):
             st.image(uploaded_file, use_container_width=True)
         elif uploaded_file.type == "application/pdf":
-            st.markdown(
-                '<div class="question-preview">📄 已上传 PDF 文件，点击下方按钮开始分析</div>',
-                unsafe_allow_html=True,
-            )
+            st.info("📄 PDF 已上传，点击下方按钮开始分析")
     else:
-        st.markdown(
-            '<div class="upload-hint">👆 点击上方按钮上传题目图片或 PDF 文件</div>',
-            unsafe_allow_html=True,
-        )
+        st.markdown('<div class="upload-hint">👆 点击上方按钮上传题目</div>', unsafe_allow_html=True)
 
-    # ── 分析按钮 ──
-    st.markdown("")  # 添加间距
+    # 分析按钮
+    st.markdown("")
     analyze_clicked = st.button(
         "🚀 开始分析",
         type="primary",
@@ -728,32 +554,25 @@ def main():
         disabled=(uploaded_file is None),
     )
 
-    # ── 执行分析 ──
+    # 执行分析
     if analyze_clicked:
         if not GEMINI_AVAILABLE:
-            st.markdown(
-                '<div class="error-banner">⚠️ 需要安装 google-generativeai 库。请运行: pip install google-generativeai</div>',
-                unsafe_allow_html=True,
-            )
+            st.error("需要安装 google-generativeai")
             st.stop()
 
-        # 处理上传文件
         try:
-            with st.spinner("🔍 正在识别题目，教练准备开讲..."):
+            with st.spinner("🔍 教练正在备课..."):
                 file_bytes = uploaded_file.read()
                 filename = uploaded_file.name
 
                 if filename.lower().endswith(".pdf"):
-                    # PDF → 图片
                     images = pdf_to_images(file_bytes)
-                    # 取第一页（AMC 8 题目通常一页一题）
                     image_bytes = images[0]
                     mime_type = "image/png"
                 else:
                     image_bytes = file_bytes
                     mime_type = get_mime_type(filename)
 
-                # 调用 Gemini
                 response_text = call_gemini(
                     api_key=api_key,
                     image_bytes=image_bytes,
@@ -762,78 +581,37 @@ def main():
                     user_text=user_text,
                 )
 
-            # ── 渲染结果 ──
+            # 使用 chat_message 展示结果
             st.markdown("---")
-            st.markdown(
-                '<div class="success-banner">✅ 教练分析完成！请查看下方讲义 👇</div>',
-                unsafe_allow_html=True,
-            )
-            st.markdown("")
-
-            parse_and_render(response_text)
-
-            # 页脚
-            st.markdown(
-                '<div class="footer">🧠 AMC 8 智学助手 · 让每一道题都成为进步的阶梯</div>',
-                unsafe_allow_html=True,
-            )
+            
+            with st.chat_message("assistant", avatar="🎓"):
+                st.markdown('<div class="success-banner">✅ 来听听教练的幽默讲解！</div>', unsafe_allow_html=True)
+                parse_and_render_with_voice(response_text)
+            
+            st.markdown('<div class="footer">🧠 AMC 8 智学助手 · 让数学像段子一样有趣</div>', unsafe_allow_html=True)
 
         except Exception as e:
-            error_msg = str(e)
-            # 友好化常见错误
-            if "api key" in error_msg.lower() or "authentication" in error_msg.lower():
-                friendly_msg = "🔑 API Key 无效，请检查您输入的 Key 是否正确"
-            elif "rate limit" in error_msg.lower() or "quota" in error_msg.lower():
-                friendly_msg = "⏳ 请求过于频繁或额度不足，请稍后再试"
-            elif "timeout" in error_msg.lower():
-                friendly_msg = "⏰ 请求超时，请检查网络后重试"
-            elif "safety" in error_msg.lower() or "blocked" in error_msg.lower():
-                friendly_msg = "🛡️ 内容被安全过滤器拦截，请尝试上传其他题目"
+            error_msg = str(e).lower()
+            if "api key" in error_msg or "authentication" in error_msg:
+                friendly_msg = "🔑 API Key 无效，请检查"
+            elif "rate limit" in error_msg or "quota" in error_msg:
+                friendly_msg = "⏳ 请求太频繁，请稍后再试"
+            elif "safety" in error_msg or "blocked" in error_msg:
+                friendly_msg = "🛡️ 内容被拦截，换道题试试"
             else:
-                friendly_msg = f"❌ 分析出错：{error_msg}"
+                friendly_msg = f"❌ 出错啦：{e}"
+            st.markdown(f'<div class="error-banner">{friendly_msg}</div>', unsafe_allow_html=True)
 
-            st.markdown(
-                f'<div class="error-banner">{friendly_msg}</div>',
-                unsafe_allow_html=True,
-            )
-
-    # ── 空状态提示 ──
+    # 空状态
     elif uploaded_file is None:
         st.markdown("")
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.markdown(
-                """
-                <div class="step-indicator" style="text-align:center;padding:2rem;">
-                    <div style="font-size:3rem;">📸</div>
-                    <h3 style="color:#374151;">第一步</h3>
-                    <p style="color:#6b7280;">上传题目图片或 PDF</p>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            st.markdown('<div style="text-align:center;padding:1.5rem;"><div style="font-size:2.5rem;">📸</div><h4 style="color:#374151;">上传题目</h4></div>', unsafe_allow_html=True)
         with col2:
-            st.markdown(
-                """
-                <div class="step-indicator" style="text-align:center;padding:2rem;">
-                    <div style="font-size:3rem;">🤖</div>
-                    <h3 style="color:#374151;">第二步</h3>
-                    <p style="color:#6b7280;">AI 教练智能识别与分析</p>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            st.markdown('<div style="text-align:center;padding:1.5rem;"><div style="font-size:2.5rem;">🎤</div><h4 style="color:#374151;">听教练讲</h4></div>', unsafe_allow_html=True)
         with col3:
-            st.markdown(
-                """
-                <div class="step-indicator" style="text-align:center;padding:2rem;">
-                    <div style="font-size:3rem;">📝</div>
-                    <h3 style="color:#374151;">第三步</h3>
-                    <p style="color:#6b7280;">获得精美讲义式讲解</p>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            st.markdown('<div style="text-align:center;padding:1.5rem;"><div style="font-size:2.5rem;">📝</div><h4 style="color:#374151;">掌握技巧</h4></div>', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
