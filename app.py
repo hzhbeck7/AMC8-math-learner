@@ -559,6 +559,12 @@ def main():
     else:
         st.markdown('<div class="upload-hint">👆 点击上方按钮上传题目</div>', unsafe_allow_html=True)
 
+    # ── 初始化 session_state ──
+    if "analysis_result" not in st.session_state:
+        st.session_state.analysis_result = None
+    if "analysis_error" not in st.session_state:
+        st.session_state.analysis_error = None
+
     # 分析按钮
     st.markdown("")
     analyze_clicked = st.button(
@@ -568,7 +574,7 @@ def main():
         disabled=(uploaded_file is None),
     )
 
-    # 执行分析
+    # 执行分析（首次或重新分析）
     if analyze_clicked:
         if not GEMINI_AVAILABLE:
             st.error("需要安装 google-generativeai")
@@ -595,14 +601,9 @@ def main():
                     user_text=user_text,
                 )
 
-            # 使用 chat_message 展示结果
-            st.markdown("---")
-            
-            with st.chat_message("assistant", avatar="🎓"):
-                st.markdown('<div class="success-banner">✅ 来听听教练的幽默讲解！</div>', unsafe_allow_html=True)
-                parse_and_render_with_voice(response_text)
-            
-            st.markdown('<div class="footer">🧠 AMC 8 智学助手 · 让数学像段子一样有趣</div>', unsafe_allow_html=True)
+            # 缓存结果到 session_state
+            st.session_state.analysis_result = response_text
+            st.session_state.analysis_error = None
 
         except Exception as e:
             error_msg = str(e).lower()
@@ -614,7 +615,21 @@ def main():
                 friendly_msg = "🛡️ 内容被拦截，换道题试试"
             else:
                 friendly_msg = f"❌ 出错啦：{e}"
-            st.markdown(f'<div class="error-banner">{friendly_msg}</div>', unsafe_allow_html=True)
+            st.session_state.analysis_error = friendly_msg
+            st.session_state.analysis_result = None
+
+    # ── 展示缓存的结果（不受按钮点击影响）──
+    if st.session_state.analysis_result:
+        st.markdown("---")
+
+        with st.chat_message("assistant", avatar="🎓"):
+            st.markdown('<div class="success-banner">✅ 来听听教练的幽默讲解！</div>', unsafe_allow_html=True)
+            parse_and_render_with_voice(st.session_state.analysis_result)
+
+        st.markdown('<div class="footer">🧠 AMC 8 智学助手 · 让数学像段子一样有趣</div>', unsafe_allow_html=True)
+
+    elif st.session_state.analysis_error:
+        st.markdown(f'<div class="error-banner">{st.session_state.analysis_error}</div>', unsafe_allow_html=True)
 
     # 空状态
     elif uploaded_file is None:
