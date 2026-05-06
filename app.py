@@ -333,36 +333,55 @@ SYSTEM_PROMPT = """\
 
 def call_gemini(api_key: str, image_bytes: bytes, mime_type: str, 
                 model: str = "gemini-2.5-flash", user_text: str = "") -> str:
-    """调用 Gemini API"""
+    """调用 Gemini API（带重试机制）"""
     if not GEMINI_AVAILABLE:
         raise RuntimeError("需要安装 google-generativeai")
 
     genai.configure(api_key=api_key)
     model_instance = genai.GenerativeModel(model)
 
-    prompt_parts = [SYSTEM_PROMPT]
+    # 构建用户消息（图片 + 文字合并为一条消息）
+    user_parts = []
     if user_text.strip():
-        prompt_parts.append(f"学生补充：{user_text.strip()}")
+        user_parts.append(f"学生补充：{user_text.strip()}\n\n")
+    user_parts.append({"mime_type": mime_type, "data": image_bytes})
+    user_parts.append("来，用你幽默的风格讲讲这道题！")
 
-    image_part = {"mime_type": mime_type, "data": image_bytes}
-    prompt_parts.append(image_part)
-    prompt_parts.append("来，用你幽默的风格讲讲这道题！")
+    # 使用标准 Content 结构
+    from google.generativeai.types import Content, Part
+    contents = [
+        Content(role="user", parts=[Part.from_text(SYSTEM_PROMPT)]),
+        Content(role="model", parts=[Part.from_text("收到！我是你的幽默数学教练，请上传题目吧！")]),
+        Content(role="user", parts=user_parts),
+    ]
 
-    safety_settings = {
-        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
-        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
-        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
-        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+    generation_config = {
+        "temperature": 0.8,
+        "max_output_tokens": 4096,
     }
 
-    generation_config = {"temperature": 0.8, "max_output_tokens": 4096}
-
-    response = model_instance.generate_content(
-        prompt_parts,
-        generation_config=generation_config,
-        safety_settings=safety_settings,
-    )
-    return response.text
+    # 最多重试 3 次
+    import time
+    last_error = None
+    for attempt in range(3):
+        try:
+            response = model_instance.generate_content(
+                contents,
+                generation_config=generation_config,
+            )
+            return response.text
+        except Exception as e:
+            last_error = e
+            error_msg = str(e).lower()
+            # 500 错误等待后重试
+            if "500" in error_msg or "internal" in error_msg:
+                wait_time = (attempt + 1) * 3
+                time.sleep(wait_time)
+                continue
+            # 其他错误直接抛出
+            raise
+    
+    raise last_error
 
 
 # ══════════════════════════════════════════════
