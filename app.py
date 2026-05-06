@@ -439,7 +439,7 @@ SYSTEM_PROMPT = """\
 # Gemini API 调用
 # ══════════════════════════════════════════════
 
-def call_gemini(api_key: str, image_bytes: bytes, mime_type: str, model: str = "gemini-2.5-flash-preview-04-17", user_text: str = "") -> str:
+def call_gemini(api_key: str, image_bytes: bytes, mime_type: str, model: str = "gemini-2.5-flash", user_text: str = "") -> str:
     """
     调用 Google Gemini API 分析数学题并生成结构化讲解。
     """
@@ -630,14 +630,14 @@ def render_settings_section():
     model_choice = st.selectbox(
         "🤖 模型",
         [
-            "gemini-2.5-flash-preview-04-17",
-            "gemini-2.5-pro-preview-03-25",
-            "gemini-2.0-flash-lite",
+            "gemini-2.5-flash",
+            "gemini-2.5-pro",
+            "gemini-2.5-flash-lite",
             "gemini-1.5-pro",
             "gemini-1.5-flash",
         ],
         index=0,
-        help="gemini-2.5-flash-preview 推荐，性价比高；gemini-2.5-pro 推理能力最强",
+        help="gemini-2.5-flash 推荐，性价比高；gemini-2.5-pro 推理能力最强",
     )
 
     st.markdown("---")
