@@ -2,7 +2,7 @@
 AMC 8 智学助手 —— 风趣幽默的数学竞赛教练
 技术栈: Streamlit + Google Gemini API (Vision) + edge-tts (语音)
 部署: Streamlit Cloud
-特性: 移动端优化、语音朗读、幽默名师人设
+特性: 移动端优化、语音朗读、幽默名师人设、云端题库支持
 """
 
 import streamlit as st
@@ -12,8 +12,15 @@ import io
 import asyncio
 import tempfile
 import os
+import requests
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
+
+# ──────────────────────────────────────────────
+# 云端题库配置
+# ──────────────────────────────────────────────
+GITHUB_BASE_URL = "https://raw.githubusercontent.com/hzbeck7/AMC8-math-learner/main/data/questions"
+COURSES = [f"L{i:02d}" for i in range(1, 14)]  # L01 到 L13
 
 # ──────────────────────────────────────────────
 # PDF 处理依赖
@@ -231,6 +238,35 @@ def get_mime_type(filename: str) -> str:
         ".gif": "image/gif", ".webp": "image/webp", ".bmp": "image/bmp",
     }
     return mime_map.get(ext, "image/png")
+
+
+# ──────────────────────────────────────────────
+# 云端题库工具函数
+# ──────────────────────────────────────────────
+
+def fetch_course_questions(course: str) -> list:
+    """获取指定课程的题目列表"""
+    try:
+        json_url = f"{GITHUB_BASE_URL}/data/{course}/questions_{course}.json"
+        response = requests.get(json_url, timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        st.warning(f"获取课程 {course} 题目列表失败: {e}")
+        return []
+
+
+def fetch_question_image(course: str, image_name: str) -> tuple:
+    """下载题目图片，返回 (图片字节, MIME类型)"""
+    try:
+        image_url = f"{GITHUB_BASE_URL}/images/{course}/{image_name}"
+        response = requests.get(image_url, timeout=15)
+        response.raise_for_status()
+        mime_type = get_mime_type(image_name)
+        return response.content, mime_type
+    except Exception as e:
+        st.warning(f"下载图片 {image_name} 失败: {e}")
+        return None, None
 
 
 # ══════════════════════════════════════════════
@@ -540,38 +576,100 @@ def main():
         st.markdown('<div class="warning-banner">⚠️ 请在上方填入 API Key 后再开始解题</div>', unsafe_allow_html=True)
         st.stop()
 
-    # 文件上传
-    st.markdown("---")
-    st.markdown("### 📤 上传题目")
-    
-    uploaded_file = st.file_uploader(
-        "选择图片或 PDF 文件",
-        type=["jpg", "jpeg", "png", "gif", "webp", "pdf"],
-        key="file_uploader",
-    )
+    # ── 侧边栏：云端题库选择 ──
+    with st.sidebar:
+        st.markdown("### 📚 云端题库")
+        st.markdown("从 GitHub 获取题目")
+        
+        selected_course = st.selectbox(
+            "选择课程",
+            COURSES,
+            key="course_select",
+        )
+        
+        questions = fetch_course_questions(selected_course)
+        
+        if questions:
+            question_options = [f"{q.get('id', q.get('number', i+1))}: {q.get('title', '无题')}" for i, q in enumerate(questions)]
+            selected_question_idx = st.selectbox(
+                "选择题目",
+                range(len(question_options)),
+                format_func=lambda x: question_options[x],
+                key="question_select",
+            )
+            selected_question = questions[selected_question_idx]
+        else:
+            selected_question = None
+            st.info(f"课程 {selected_course} 暂无题目")
+        
+        use_cloud = st.checkbox("使用云端题库", key="use_cloud_checkbox")
 
-    if uploaded_file is not None:
-        st.markdown("#### 📷 题目预览")
-        if uploaded_file.type.startswith("image/"):
-            st.image(uploaded_file, use_container_width=True)
-        elif uploaded_file.type == "application/pdf":
-            st.info("📄 PDF 已上传，点击下方按钮开始分析")
-    else:
-        st.markdown('<div class="upload-hint">👆 点击上方按钮上传题目</div>', unsafe_allow_html=True)
+    # ── 主内容区 ──
+    tab1, tab2 = st.tabs(["📤 上传题目", "☁️ 云端题库"])
+    
+    image_bytes = None
+    mime_type = None
+    source_type = None  # "upload" 或 "cloud"
+
+    with tab1:
+        st.markdown("### 📤 上传题目")
+        
+        uploaded_file = st.file_uploader(
+            "选择图片或 PDF 文件",
+            type=["jpg", "jpeg", "png", "gif", "webp", "pdf"],
+            key="file_uploader",
+        )
+
+        if uploaded_file is not None:
+            st.markdown("#### 📷 题目预览")
+            if uploaded_file.type.startswith("image/"):
+                st.image(uploaded_file, use_container_width=True)
+            elif uploaded_file.type == "application/pdf":
+                st.info("📄 PDF 已上传，点击下方按钮开始分析")
+
+    with tab2:
+        st.markdown("### ☁️ 云端题库")
+        
+        if selected_question and use_cloud:
+            image_name = selected_question.get("image")
+            if image_name:
+                with st.spinner("🔄 正在加载题目图片..."):
+                    img_bytes, img_mime = fetch_question_image(selected_course, image_name)
+                    if img_bytes:
+                        image_bytes = img_bytes
+                        mime_type = img_mime
+                        source_type = "cloud"
+                        st.image(img_bytes, use_container_width=True)
+                        st.markdown(f"**题目信息：** {selected_question.get('title', '')}")
+                    else:
+                        st.error("无法加载题目图片")
+            else:
+                st.warning("该题目没有关联图片")
+        else:
+            st.info("请在侧边栏选择课程和题目，并勾选「使用云端题库」")
 
     # ── 初始化 session_state ──
     if "analysis_result" not in st.session_state:
         st.session_state.analysis_result = None
     if "analysis_error" not in st.session_state:
         st.session_state.analysis_error = None
+    if "cloud_image_bytes" not in st.session_state:
+        st.session_state.cloud_image_bytes = None
+    if "cloud_mime_type" not in st.session_state:
+        st.session_state.cloud_mime_type = None
 
-    # 分析按钮
-    st.markdown("")
+    # 缓存云端图片到 session_state
+    if image_bytes:
+        st.session_state.cloud_image_bytes = image_bytes
+        st.session_state.cloud_mime_type = mime_type
+    
+    # 分析按钮的禁用条件
+    has_source = (uploaded_file is not None) or (st.session_state.cloud_image_bytes is not None)
     analyze_clicked = st.button(
         "🚀 开始分析",
         type="primary",
         use_container_width=True,
-        disabled=(uploaded_file is None),
+        disabled=not has_source,
     )
 
     # 执行分析（首次或重新分析）
@@ -582,16 +680,20 @@ def main():
 
         try:
             with st.spinner("🔍 教练正在备课..."):
-                file_bytes = uploaded_file.read()
-                filename = uploaded_file.name
+                if source_type == "cloud" and st.session_state.cloud_image_bytes:
+                    image_bytes = st.session_state.cloud_image_bytes
+                    mime_type = st.session_state.cloud_mime_type
+                elif uploaded_file:
+                    file_bytes = uploaded_file.read()
+                    filename = uploaded_file.name
 
-                if filename.lower().endswith(".pdf"):
-                    images = pdf_to_images(file_bytes)
-                    image_bytes = images[0]
-                    mime_type = "image/png"
-                else:
-                    image_bytes = file_bytes
-                    mime_type = get_mime_type(filename)
+                    if filename.lower().endswith(".pdf"):
+                        images = pdf_to_images(file_bytes)
+                        image_bytes = images[0]
+                        mime_type = "image/png"
+                    else:
+                        image_bytes = file_bytes
+                        mime_type = get_mime_type(filename)
 
                 response_text = call_gemini(
                     api_key=api_key,
@@ -632,15 +734,15 @@ def main():
         st.markdown(f'<div class="error-banner">{st.session_state.analysis_error}</div>', unsafe_allow_html=True)
 
     # 空状态
-    elif uploaded_file is None:
+    elif not has_source:
         st.markdown("")
         col1, col2, col3 = st.columns(3)
         with col1:
             st.markdown('<div style="text-align:center;padding:1.5rem;"><div style="font-size:2.5rem;">📸</div><h4 style="color:#374151;">上传题目</h4></div>', unsafe_allow_html=True)
         with col2:
-            st.markdown('<div style="text-align:center;padding:1.5rem;"><div style="font-size:2.5rem;">🎤</div><h4 style="color:#374151;">听教练讲</h4></div>', unsafe_allow_html=True)
+            st.markdown('<div style="text-align:center;padding:1.5rem;"><div style="font-size:2.5rem;">☁️</div><h4 style="color:#374151;">云端题库</h4></div>', unsafe_allow_html=True)
         with col3:
-            st.markdown('<div style="text-align:center;padding:1.5rem;"><div style="font-size:2.5rem;">📝</div><h4 style="color:#374151;">掌握技巧</h4></div>', unsafe_allow_html=True)
+            st.markdown('<div style="text-align:center;padding:1.5rem;"><div style="font-size:2.5rem;">🎤</div><h4 style="color:#374151;">听教练讲</h4></div>', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
