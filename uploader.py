@@ -47,13 +47,32 @@ def is_likely_logo(image_bytes, min_size_kb=10, min_width=200, min_height=200):
     """
     try:
         size_kb = len(image_bytes) / 1024
-        if size_kb < min_size_kb:
-            return True
         
         with Image.open(io.BytesIO(image_bytes)) as img:
             width, height = img.size
+            aspect_ratio = width / height if height > 0 else 0
+            
+            if size_kb < min_size_kb:
+                return True
+            
             if width < min_width and height < min_height:
                 return True
+            
+            if aspect_ratio > 2.5 or aspect_ratio < 0.4:
+                return True
+            
+            img = img.convert('RGB')
+            pixels = img.getcolors(width * height)
+            if pixels:
+                color_count = len(pixels)
+                if color_count < 10:
+                    return True
+            
+            total_pixels = width * height
+            dominant_color, count = pixels[0] if pixels else (None, 0)
+            if dominant_color and count / total_pixels > 0.7:
+                return True
+                
     except Exception:
         pass
     
