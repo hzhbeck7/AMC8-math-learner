@@ -102,34 +102,52 @@ html, body,
     margin-top:.7rem; letter-spacing:.1em;
 }
 
-/* Section Cards */
-.sc {
-    background:var(--card-bg); border:1px solid var(--border);
-    border-radius:16px; padding:1.4rem 1.6rem;
-    margin:1rem 0; position:relative; overflow:hidden;
+/* Section Header (装饰条) — 仅标题用 HTML，正文交给 Streamlit markdown */
+.sec-header {
+    position:relative;
+    border:1px solid var(--border);
+    border-radius:14px 14px 0 0;
+    padding:1rem 1.3rem .7rem;
+    margin:1.2rem 0 0;
+    background:var(--card-bg);
+    backdrop-filter:blur(8px);
+    border-bottom:none;
+}
+.sec-header::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    border-radius:14px 14px 0 0;
+}
+.sec-header.sh-t::before { background:linear-gradient(90deg,#F5C842,#FB923C); }
+.sec-header.sh-c::before { background:linear-gradient(90deg,#3B82F6,#8B5CF6); }
+.sec-header.sh-l::before { background:linear-gradient(90deg,#22C55E,#16A34A); }
+.sec-header p {
+    font-family:'ZCOOL XiaoWei',serif; font-size:1.22rem;
+    margin:0; letter-spacing:.03em;
+}
+.sh-t p { color:#F5C842; }
+.sh-c p { color:#60A5FA; }
+.sh-l p { color:#4ADE80; }
+
+/* Section body container — 通过 class 给紧跟的 markdown 区域加样式 */
+.sec-body-wrap {
+    border:1px solid var(--border);
+    border-top:none;
+    border-radius:0 0 14px 14px;
+    padding:.3rem 1.3rem 1.2rem;
+    margin:0 0 1rem;
+    background:var(--card-bg);
     backdrop-filter:blur(8px);
 }
-.sc::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:3px;
-    border-radius:16px 16px 0 0;
+.sec-body-wrap .katex { color: var(--text) !important; font-size:1.02em; }
+.sec-body-wrap .katex-display { margin:.8em 0 !important; }
+.sec-body-wrap p, .sec-body-wrap li { line-height:1.95; font-size:.93rem; color:var(--text); }
+.sec-body-wrap code {
+    background:rgba(245,200,66,.1);
+    color:#FFE87C;
+    padding:.08em .35em;
+    border-radius:4px;
+    font-size:.9em;
 }
-.sc-t::before { background:linear-gradient(90deg,#F5C842,#FB923C); }
-.sc-c::before { background:linear-gradient(90deg,#3B82F6,#8B5CF6); }
-.sc-l::before { background:linear-gradient(90deg,#22C55E,#16A34A); }
-
-.sc-deco {
-    position:absolute; right:1.2rem; bottom:.4rem;
-    font-size:5.5rem; opacity:.04; pointer-events:none; user-select:none;
-    line-height:1;
-}
-.sc-label {
-    font-family:'ZCOOL XiaoWei',serif; font-size:1.22rem;
-    margin:0 0 .85rem; display:flex; align-items:center; gap:.45rem;
-}
-.sc-body { line-height:1.95; font-size:.93rem; color:var(--text); }
-.lbl-t { color:#F5C842; }
-.lbl-c { color:#60A5FA; }
-.lbl-g { color:#4ADE80; }
 
 /* Buttons */
 .stButton > button {
@@ -177,14 +195,10 @@ html, body,
     border: 2px dashed rgba(245,200,66,.35) !important;
     border-radius: 14px !important;
 }
-[data-testid="stFileUploader"] * {
-    color: #D0DCF0 !important;
-}
+[data-testid="stFileUploader"] * { color: #D0DCF0 !important; }
 [data-testid="stFileUploader"] small,
 [data-testid="stFileUploader"] span,
-[data-testid="stFileUploader"] p {
-    color: #A0B4CC !important;
-}
+[data-testid="stFileUploader"] p { color: #A0B4CC !important; }
 
 /* Tabs */
 .stTabs [data-baseweb="tab-list"] {
@@ -222,10 +236,18 @@ hr { border-color:var(--border) !important; margin:1.4rem 0 !important; }
     font-size:.98rem; margin:1rem 0 .4rem; letter-spacing:.05em;
 }
 
+/* 让 Streamlit 默认的 markdown 公式显示得更清晰 */
+.stMarkdown .katex { font-size:1.02em; }
+.stMarkdown .katex-display {
+    background:rgba(255,255,255,.02);
+    padding:.4em 0;
+    border-radius:6px;
+    margin:.6em 0 !important;
+}
+
 @media (max-width:768px) {
-    .sc { padding:1rem 1.1rem; }
+    .sec-header, .sec-body-wrap { padding-left:.9rem; padding-right:.9rem; }
     .hero-wrap { padding:1.2rem .5rem .8rem; }
-    .sc-deco { display:none; }
 }
 
 .footer { text-align:center; padding:2rem 0 1rem; color:#1E2D45; font-size:.72rem; line-height:1.9; }
@@ -272,24 +294,45 @@ def pdf_to_pil(pdf_bytes, max_pages=10):
 
 
 # ─── Gemini ───────────────────────────────────────────────────────────────────────
-TUTOR_PROMPT = """你是一位风趣幽默、充满激情的奥数教练，专门辅导AMC 8竞赛。
+TUTOR_PROMPT = r"""你是一位风趣幽默、充满激情的奥数教练，专门辅导AMC 8竞赛。
 风格：说话接地气、爱用比喻和段子、善于鼓励孩子、把复杂数学变得有趣好玩。
 
-请分析题目，严格按以下Markdown格式输出：
+【极其重要的排版规则，必须严格遵守】
+1. 所有数学内容必须使用标准 LaTeX 符号，并用美元符号包裹：
+   - 行内公式用 $...$，例如 $a^2 + b^2 = c^2$
+   - 独立公式（单独成行展示）用 $$...$$，例如 $$\frac{7!}{1! \times 1! \times 2! \times 3!} = 420$$
+2. 绝对禁止在 LaTeX 公式里写中文（不要用 \text{排列方式} 这样的写法）。
+   如果需要给公式加中文标签，把中文写在公式外面，例如：
+   排列方式数 $= \dfrac{7!}{1! \cdot 1! \cdot 2! \cdot 3!} = 420$
+3. 所有数字运算、变量、分数、根号、上下标、求和、阶乘等都必须写成 LaTeX，禁止使用裸文本如 "7!/1!x2!x3!" 或 "times"。
+   - 乘号用 \times 或 \cdot（写在 $...$ 中）
+   - 除号/分数用 \dfrac{...}{...} 或 \frac{...}{...}
+   - 根号用 \sqrt{...}
+   - 不等号用 \le \ge \ne
+4. 普通中文文字、段落标题正常写，不要用 $...$ 包裹。
 
-## 🎭 【数学小剧场】
-讲一个与本题知识点相关的数学家故事或趣味历史（150字左右，生动有趣）。
+请严格按以下 Markdown 格式输出三个板块：
 
-## 🔍 【教练透视眼】
-简洁总结本题核心知识点和考点（要点列表）。
+## 🎭 数学小剧场
+讲一个与本题知识点相关的数学家故事或趣味历史（约150字，生动有趣，一般不需要公式）。
 
-## 🧩 【逻辑拆解步】
-分步骤、引导式讲解解题逻辑。要求：
+## 🔍 教练透视眼
+用要点列表总结本题核心知识点和考点。涉及公式时用 $...$ 包起来。
+
+## 🧩 逻辑拆解步
+分步骤、引导式讲解解题逻辑，要求：
 - 语言幽默接地气，像朋友聊天
-- 用生动比喻（如把勾股定理比作三角形的"铁三角"关系）
-- 必须包含1-2个冷笑话或鼓励语（如"这题你要是做对了，我看你离数学家高斯也就差两斤头发的距离了"）
-- 引导思维过程，不只给答案
-- 最后给出正确答案"""
+- 所有算式一律使用 LaTeX（按上述规则）
+- 用生动比喻
+- 包含 1~2 个冷笑话或鼓励语
+- 引导思维，不只给答案
+- 最后明确给出正确答案，格式：**答案：(选项) 数值**
+
+输出示例片段（仅供排版参考）：
+第一步，列出总数：$$7! = 7 \times 6 \times 5 \times 4 \times 3 \times 2 \times 1 = 5040$$
+再除以重复部分：$$\dfrac{7!}{1! \cdot 1! \cdot 2! \cdot 3!} = \dfrac{5040}{12} = 420$$
+所以答案是 $420$ 种排列方式。
+"""
 
 
 def analyze_question(api_key: str, parts: list) -> str:
@@ -306,6 +349,7 @@ def extract_questions_from_pdf(api_key: str, images: list) -> dict:
         "请从这些PDF页面中提取所有数学题目，以纯JSON格式返回（不要加```代码块标记）。\n"
         '格式：{"questions":[{"id":1,"title":"编号或标题","content":"完整题目含选项",'
         '"topic":"几何/代数/数论/组合/概率","difficulty":"简单/中等/困难"}]}\n'
+        "题目中的数学公式请尽量使用 LaTeX，用 $...$ 包裹。\n"
         "只返回JSON，不要其他内容。"
     )
     response = model.generate_content([prompt] + images[:8])
@@ -317,11 +361,32 @@ def extract_questions_from_pdf(api_key: str, images: list) -> dict:
 
 # ─── TTS ─────────────────────────────────────────────────────────────────────────
 def _clean_tts(text: str) -> str:
+    """去掉 Markdown、LaTeX 语法，尽量让 TTS 读得自然。"""
+    # 去掉独立公式 $$...$$
+    text = re.sub(r"\$\$(.+?)\$\$", lambda m: _latex_to_speech(m.group(1)), text, flags=re.S)
+    # 去掉行内公式 $...$
+    text = re.sub(r"\$(.+?)\$", lambda m: _latex_to_speech(m.group(1)), text, flags=re.S)
+    # 去除 Markdown 符号
     text = re.sub(r"#+\s*", "", text)
     text = re.sub(r"\*+", "", text)
-    text = re.sub(r"[🎭🔍🧩【】]", "", text)
+    text = re.sub(r"[🎭🔍🧩【】`>]", "", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()[:3500]
+
+
+def _latex_to_speech(s: str) -> str:
+    """把常见 LaTeX 命令转成便于朗读的中文。"""
+    s = s.replace("\\times", "乘以").replace("\\cdot", "点乘")
+    s = s.replace("\\div", "除以")
+    s = s.replace("\\le", "小于等于").replace("\\ge", "大于等于").replace("\\ne", "不等于")
+    s = s.replace("\\pi", "派")
+    s = re.sub(r"\\d?frac\{([^{}]+)\}\{([^{}]+)\}", r"\1 分之 \2", s)
+    s = re.sub(r"\\sqrt\{([^{}]+)\}", r"根号下\1", s)
+    s = re.sub(r"\^\{?([^{}\s]+)\}?", r"的\1次方", s)
+    s = re.sub(r"_\{?([^{}\s]+)\}?", r"下标\1", s)
+    s = re.sub(r"\\[a-zA-Z]+", "", s)  # 其它命令去掉
+    s = s.replace("{", "").replace("}", "")
+    return s
 
 
 def generate_audio(text: str):
@@ -392,22 +457,39 @@ def parse_sections(text: str) -> dict:
     return sections
 
 
-# ─── Render result ────────────────────────────────────────────────────────────────
-def render_result(result_text: str, key_suffix: str = "default"):
-    """Render AI answer cards.
+def _sanitize_latex(md: str) -> str:
+    """兜底处理：如果 AI 没加 $...$，尝试给孤立的 LaTeX 片段自动补上。"""
+    # 若整行出现 \frac / \times / \cdot 等但没有 $，包成 $$...$$
+    def wrap_line(line: str) -> str:
+        if "$" in line:
+            return line
+        if re.search(r"\\(frac|dfrac|sqrt|times|cdot|sum|int|binom|pi)\b", line):
+            stripped = line.strip()
+            if stripped:
+                return line.replace(stripped, f"$${stripped}$$")
+        return line
+    return "\n".join(wrap_line(ln) for ln in md.splitlines())
 
-    `key_suffix` 用于给按钮和 session_state 中的音频数据做命名空间隔离，
-    防止在不同入口（题库/图片/文字）同时渲染时产生重复 key 错误。
-    """
+
+# ─── Render result ────────────────────────────────────────────────────────────────
+def _render_section(title_html_class: str, title_text: str, body_md: str):
+    """渲染一个板块：标题条用 HTML，正文交给 Streamlit markdown 以启用 LaTeX 渲染。"""
+    st.markdown(
+        f'<div class="sec-header {title_html_class}"><p>{title_text}</p></div>',
+        unsafe_allow_html=True,
+    )
+    # 用 container 给 markdown 包一层，配合 CSS 给底部加边框
+    st.markdown('<div class="sec-body-wrap">', unsafe_allow_html=True)
+    st.markdown(_sanitize_latex(body_md))
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+def render_result(result_text: str, key_suffix: str = "default"):
+    """Render AI answer cards with proper LaTeX support."""
     sec = parse_sections(result_text)
 
     if sec.get("theater"):
-        st.markdown(f"""
-<div class="sc sc-t">
-  <div class="sc-deco">🎭</div>
-  <p class="sc-label lbl-t">🎭 数学小剧场</p>
-  <div class="sc-body">{sec['theater'].replace(chr(10), '<br>')}</div>
-</div>""", unsafe_allow_html=True)
+        _render_section("sh-t", "🎭 数学小剧场", sec["theater"])
 
     # ── Voice button ──────────────────────────────────────────────────────────
     tts_src = (sec.get("theater", "") + "\n\n" + sec.get("logic", "")).strip()
@@ -433,30 +515,16 @@ def render_result(result_text: str, key_suffix: str = "default"):
             st.error("语音生成失败，请确保已安装 edge-tts（pip install edge-tts）")
 
     if sec.get("coach"):
-        st.markdown(f"""
-<div class="sc sc-c">
-  <div class="sc-deco">🔍</div>
-  <p class="sc-label lbl-c">🔍 教练透视眼</p>
-  <div class="sc-body">{sec['coach'].replace(chr(10), '<br>')}</div>
-</div>""", unsafe_allow_html=True)
+        _render_section("sh-c", "🔍 教练透视眼", sec["coach"])
 
     if sec.get("logic"):
-        st.markdown(f"""
-<div class="sc sc-l">
-  <div class="sc-deco">🧩</div>
-  <p class="sc-label lbl-g">🧩 逻辑拆解步</p>
-  <div class="sc-body">{sec['logic'].replace(chr(10), '<br>')}</div>
-</div>""", unsafe_allow_html=True)
+        _render_section("sh-l", "🧩 逻辑拆解步", sec["logic"])
 
     if not any(sec.get(k) for k in ("theater", "coach", "logic")):
-        st.markdown(f"""
-<div class="sc" style="border-color:rgba(245,200,66,.35);">
-  <div class="sc-body">{result_text.replace(chr(10), '<br>')}</div>
-</div>""", unsafe_allow_html=True)
+        st.markdown(_sanitize_latex(result_text))
 
 
 def _clear_tts_cache():
-    """清空所有 tts 相关的 session_state，防止新题残留旧音频。"""
     for k in list(st.session_state.keys()):
         if k.startswith("tts_audio_") or k.startswith("tts_error_"):
             st.session_state.pop(k, None)
@@ -475,7 +543,6 @@ def render_sidebar() -> str:
 </div>""", unsafe_allow_html=True)
         st.divider()
 
-        # API Key
         st.markdown('<p class="sb-label">🔑 API 设置</p>', unsafe_allow_html=True)
         api_key = st.text_input(
             "请输入您的 Gemini API Key",
@@ -486,7 +553,6 @@ def render_sidebar() -> str:
 
         st.divider()
 
-        # Question bank
         bank = load_bank()
         st.markdown(
             f'<p class="sb-label">📚 题库 '
@@ -495,17 +561,12 @@ def render_sidebar() -> str:
             unsafe_allow_html=True
         )
 
-        topic_colors = {
-            "几何": "#60A5FA", "代数": "#F472B6",
-            "数论": "#A78BFA", "组合": "#34D399", "概率": "#FB923C",
-        }
         if bank:
             for i, q in enumerate(bank):
-                tc = topic_colors.get(q.get("topic", ""), "#94A3B8")
                 label = f"#{q.get('id', i+1)} [{q.get('topic','?')}] {q.get('title', '题目')[:16]}"
                 if st.button(label, key=f"qb_{i}"):
                     st.session_state["qbank_selected"] = q
-                    st.session_state["ai_result"] = None  # 重置，由主流程重新分析
+                    st.session_state["ai_result"] = None
                     _clear_tts_cache()
         else:
             st.markdown(
@@ -516,7 +577,6 @@ def render_sidebar() -> str:
 
         st.divider()
 
-        # Admin panel
         st.markdown('<p class="sb-label">⚙️ 管理后台</p>', unsafe_allow_html=True)
         with st.expander("🔐 管理员登录", expanded=False):
             pwd = st.text_input("管理员密码", type="password", key="admin_pwd_input")
@@ -565,14 +625,12 @@ def render_sidebar() -> str:
 
 # ─── Main ─────────────────────────────────────────────────────────────────────────
 def main():
-    # 初始化 session_state
     for k in ("qbank_selected", "ai_result", "last_source"):
         if k not in st.session_state:
             st.session_state[k] = None
 
     api_key = render_sidebar()
 
-    # Hero header
     st.markdown("""
 <div class="hero-wrap">
   <div class="hero-icon">🏆</div>
@@ -581,18 +639,19 @@ def main():
   <span class="hero-badge">✨ 幽默教练 AI 驱动 · 让每道题都有故事</span>
 </div>""", unsafe_allow_html=True)
 
-    # ── 题库题目分支（优先处理） ────────────────────────────────────────────────
+    # 题库题目分支
     if st.session_state.get("qbank_selected"):
         q = st.session_state.pop("qbank_selected")
-        st.markdown(f"""
-<div class="sc" style="border-color:rgba(99,102,241,.4);margin-bottom:1.2rem;">
-  <p style="color:#818CF8;font-size:.82rem;margin:0 0 .6rem;">
-    📚 题库题目 #{q.get('id','?')} ·
-    <span style="color:#60A5FA;">{q.get('topic','—')}</span> ·
-    {q.get('difficulty','—')}
-  </p>
-  <div class="sc-body">{q.get('content','').replace(chr(10),'<br>')}</div>
-</div>""", unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="sec-header" style="border-color:rgba(99,102,241,.4);border-radius:14px;border-bottom:1px solid rgba(99,102,241,.4);">'
+            f'<p style="color:#818CF8;font-size:.9rem;">📚 题库题目 #{q.get("id","?")} · '
+            f'{q.get("topic","—")} · {q.get("difficulty","—")}</p>'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown('<div class="sec-body-wrap">', unsafe_allow_html=True)
+        st.markdown(_sanitize_latex(q.get("content", "")))
+        st.markdown('</div>', unsafe_allow_html=True)
 
         if not api_key:
             st.warning("请在左侧边栏输入 Gemini API Key")
@@ -615,7 +674,7 @@ def main():
         )
         return
 
-    # ── 输入 Tab ─────────────────────────────────────────────────────────────
+    # 输入 Tab
     tab_img, tab_txt = st.tabs(["📤 上传图片 / PDF", "✏️ 手动输入题目"])
 
     with tab_img:
@@ -715,7 +774,7 @@ def main():
                             st.error(f"解析失败: {e}")
                             st.session_state["ai_result"] = None
 
-    # ── 统一渲染结果（放在 tab 外只调用一次，避免重复 key） ──────────────────────
+    # 统一渲染结果（tab 外只调用一次）
     if st.session_state.get("ai_result"):
         st.divider()
         render_result(st.session_state["ai_result"], key_suffix="main")
