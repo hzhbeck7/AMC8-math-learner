@@ -18,10 +18,27 @@ except ImportError:
 
 def configure_gemini(api_key):
     """
-    配置 Google Gemini API
+    配置 Google Gemini API，支持多个模型回退
     """
     genai.configure(api_key=api_key)
-    return genai.GenerativeModel('gemini-1.5-flash')
+    
+    models_to_try = [
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
 
 def extract_course_number(filename):
     """
