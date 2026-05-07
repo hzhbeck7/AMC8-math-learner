@@ -346,14 +346,21 @@ def create_directory(github_token, dir_path):
         url = f"https://api.github.com/repos/hzbeck7/AMC8-math-learner/contents/{encoded_path}"
         
         response = requests.get(url, headers=headers)
+        st.info(f"检查目录: {current_path}, 状态码: {response.status_code}")
+        
         if response.status_code == 404:
+            st.info(f"创建目录: {current_path}")
             payload = {
                 "message": f"Create directory {current_path}",
                 "content": base64.b64encode(b"").decode('utf-8')
             }
             response = requests.put(url, headers=headers, json=payload)
+            st.info(f"创建结果: {response.status_code}, 响应: {response.text[:100]}")
             if response.status_code != 201:
+                st.error(f"目录创建失败 {current_path}: {response.text}")
                 return False
+        else:
+            st.info(f"目录已存在: {current_path}")
     
     return True
 
@@ -386,8 +393,17 @@ def upload_to_github(github_token, path, content, message):
         
         if response.status_code == 404:
             dir_path = os.path.dirname(path)
-            create_directory(github_token, dir_path)
-            response = requests.put(url, headers=headers, json=payload)
+            st.info(f"目录不存在，正在创建: {dir_path}")
+            success = create_directory(github_token, dir_path)
+            if success:
+                st.info(f"目录创建成功")
+                response = requests.get(url, headers=headers)
+                if response.status_code == 200:
+                    payload["sha"] = response.json()["sha"]
+                response = requests.put(url, headers=headers, json=payload)
+            else:
+                st.error(f"目录创建失败: {dir_path}")
+                return False
         
         response.raise_for_status()
         return True
@@ -670,6 +686,18 @@ def admin_panel():
         if admin_password == st.secrets.get("ADMIN_PASSWORD", "admin123"):
             st.success("✅ 身份验证通过")
             
+            github_token = st.secrets.get("GITHUB_TOKEN", "")
+            gemini_key = st.secrets.get("GEMINI_API_KEY", "")
+            
+            if not github_token:
+                st.error("❌ 未配置 GitHub Token，请在 Streamlit Secrets 中设置")
+                return
+            if not gemini_key:
+                st.error("❌ 未配置 Gemini API Key，请在 Streamlit Secrets 中设置")
+                return
+            
+            st.success("✅ GitHub Token 和 Gemini API Key 已配置")
+            
             st.markdown("---")
             st.markdown("### 📤 上传题库")
             
@@ -680,31 +708,9 @@ def admin_panel():
                 key="admin_pdf_uploader"
             )
             
-            github_token = st.text_input(
-                "GitHub Token",
-                type="password",
-                placeholder="输入 GitHub Token",
-                key="github_token",
-                value=st.secrets.get("GITHUB_TOKEN", "")
-            )
-            
-            gemini_key = st.text_input(
-                "Gemini API Key",
-                type="password",
-                placeholder="输入 Gemini API Key",
-                key="gemini_admin_key",
-                value=st.secrets.get("GEMINI_API_KEY", "")
-            )
-            
             if st.button("🚀 开始入库", key="start_upload"):
                 if not uploaded_pdfs:
                     st.error("请先上传 PDF 文件")
-                    return
-                if not github_token:
-                    st.error("请输入 GitHub Token")
-                    return
-                if not gemini_key:
-                    st.error("请输入 Gemini API Key")
                     return
                 
                 progress_bar = st.progress(0)
