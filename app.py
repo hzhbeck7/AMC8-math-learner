@@ -14,6 +14,7 @@ import tempfile
 import os
 import json
 import requests
+from urllib.parse import quote
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 
@@ -329,7 +330,8 @@ def analyze_image_with_gemini(model, image_bytes):
 
 
 def upload_to_github(github_token, path, content, message):
-    url = f"https://api.github.com/repos/hzbeck7/AMC8-math-learner/contents/{path}"
+    encoded_path = quote(path)
+    url = f"https://api.github.com/repos/hzbeck7/AMC8-math-learner/contents/{encoded_path}"
     
     headers = {
         "Authorization": f"token {github_token}",
