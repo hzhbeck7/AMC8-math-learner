@@ -699,6 +699,39 @@ def admin_panel():
             
             st.success("✅ GitHub Token 和 Gemini API Key 已配置")
             
+            # 验证 GitHub Token 权限
+            with st.spinner("🔍 正在验证 GitHub Token..."):
+                headers = {
+                    "Authorization": f"token {github_token}",
+                    "Accept": "application/vnd.github.v3+json"
+                }
+                
+                # 验证 Token 有效性
+                response = requests.get("https://api.github.com/user", headers=headers, timeout=10)
+                if response.status_code != 200:
+                    st.error(f"❌ GitHub Token 无效或已过期: {response.status_code}")
+                    return
+                user_info = response.json()
+                st.success(f"✅ Token 有效，用户: {user_info.get('login')}")
+                
+                # 验证仓库访问权限
+                repo_url = "https://api.github.com/repos/hzbeck7/AMC8-math-learner"
+                response = requests.get(repo_url, headers=headers, timeout=10)
+                if response.status_code == 404:
+                    st.error("❌ 无法访问仓库 hzbeck7/AMC8-math-learner，请检查：\n1. 仓库是否存在\n2. Token 是否有 repo 权限\n3. 是否有写入权限")
+                    return
+                elif response.status_code != 200:
+                    st.error(f"❌ 仓库访问失败: {response.status_code} - {response.text}")
+                    return
+                
+                repo_info = response.json()
+                permissions = repo_info.get('permissions', {})
+                if not permissions.get('push'):
+                    st.error("❌ Token 没有写入权限，请在 GitHub Token 设置中勾选 'repo' 权限")
+                    return
+                
+                st.success(f"✅ 仓库访问正常，有写入权限")
+            
             st.markdown("---")
             st.markdown("### 📤 上传题库")
             
