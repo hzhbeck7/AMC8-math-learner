@@ -360,53 +360,136 @@ def extract_questions_from_pdf(api_key: str, images: list) -> dict:
 
 
 # ─── TTS ─────────────────────────────────────────────────────────────────────────
-def _clean_tts(text: str) -> str:
-    """去掉 Markdown、LaTeX 语法，尽量让 TTS 读得自然。"""
-    # 去掉独立公式 $$...$$
-    text = re.sub(r"\$\$(.+?)\$\$", lambda m: _latex_to_speech(m.group(1)), text, flags=re.S)
-    # 去掉行内公式 $...$
-    text = re.sub(r"\$(.+?)\$", lambda m: _latex_to_speech(m.group(1)), text, flags=re.S)
-    # 去除 Markdown 符号
-    text = re.sub(r"#+\s*", "", text)
-    text = re.sub(r"\*+", "", text)
-    text = re.sub(r"[🎭🔍🧩【】`>]", "", text)
-    text = re.sub(r"\n{3,}", "\n\n", text)
-    return text.strip()[:3500]
-
-
 def _latex_to_speech(s: str) -> str:
     """把常见 LaTeX 命令转成便于朗读的中文。"""
-    s = s.replace("\\times", "乘以").replace("\\cdot", "点乘")
-    s = s.replace("\\div", "除以")
-    s = s.replace("\\le", "小于等于").replace("\\ge", "大于等于").replace("\\ne", "不等于")
-    s = s.replace("\\pi", "派")
-    s = re.sub(r"\\d?frac\{([^{}]+)\}\{([^{}]+)\}", r"\1 分之 \2", s)
-    s = re.sub(r"\\sqrt\{([^{}]+)\}", r"根号下\1", s)
-    s = re.sub(r"\^\{?([^{}\s]+)\}?", r"的\1次方", s)
-    s = re.sub(r"_\{?([^{}\s]+)\}?", r"下标\1", s)
-    s = re.sub(r"\\[a-zA-Z]+", "", s)  # 其它命令去掉
+    # 分数：\frac{a}{b} 或 \dfrac{a}{b} / \tfrac{a}{b}
+    s = re.sub(r"\\[dt]?frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}", r"\1 分之 \2", s)
+    # 根号
+    s = re.sub(r"\\sqrt\s*\{([^{}]+)\}", r"根号下 \1", s)
+    # 组合数 \binom{n}{k}
+    s = re.sub(r"\\binom\s*\{([^{}]+)\}\s*\{([^{}]+)\}", r"\1 选 \2", s)
+    # 上标 a^{b} 或 a^b
+    s = re.sub(r"\^\{([^{}]+)\}", r" 的 \1 次方", s)
+    s = re.sub(r"\^([0-9a-zA-Z])", r" 的 \1 次方", s)
+    # 下标 a_{b} 或 a_b
+    s = re.sub(r"_\{([^{}]+)\}", r" 下标 \1", s)
+    s = re.sub(r"_([0-9a-zA-Z])", r" 下标 \1", s)
+
+    # 常见符号替换
+    replacements = {
+        r"\\times": "乘以",
+        r"\\cdot": "乘以",
+        r"\\div": "除以",
+        r"\\pm": "正负",
+        r"\\mp": "负正",
+        r"\\le(?:q)?\b": "小于等于",
+        r"\\ge(?:q)?\b": "大于等于",
+        r"\\ne(?:q)?\b": "不等于",
+        r"\\approx": "约等于",
+        r"\\infty": "无穷",
+        r"\\pi": "派",
+        r"\\alpha": "阿尔法",
+        r"\\beta": "贝塔",
+        r"\\theta": "西塔",
+        r"\\angle": "角",
+        r"\\triangle": "三角形",
+        r"\\circ": "度",
+        r"\\left": "",
+        r"\\right": "",
+        r"\\quad": " ",
+        r"\\,": " ",
+        r"\\;": " ",
+        r"\\!": "",
+    }
+    for pat, rep in replacements.items():
+        s = re.sub(pat, rep, s)
+
+    # 剩余的所有 \xxx 命令一律去掉
+    s = re.sub(r"\\[a-zA-Z]+\*?", "", s)
+    # 去掉花括号、反斜杠、美元符号、脱字号、下划线等 TTS 读不出的符号
     s = s.replace("{", "").replace("}", "")
+    s = s.replace("\\", "").replace("$", "")
+    s = s.replace("^", "").replace("_", "")
     return s
 
 
+def _clean_tts(text: str) -> str:
+    """把 Markdown + LaTeX 内容清洗成纯文本，供 TTS 朗读。"""
+    if not text:
+        return ""
+
+    # 先处理公式（$$...$$ 和 $...$）
+    text = re.sub(r"\$\$(.+?)\$\$", lambda m: _latex_to_speech(m.group(1)), text, flags=re.S)
+    text = re.sub(r"\$(.+?)\$", lambda m: _latex_to_speech(m.group(1)), text, flags=re.S)
+
+    # 去 Markdown 标题/加粗/斜体/代码反引号
+    text = re.sub(r"#+\s*", "", text)
+    text = re.sub(r"\*{1,3}", "", text)
+    text = re.sub(r"`+", "", text)
+    text = re.sub(r"^[\->\s]+", "", text, flags=re.M)
+
+    # emoji 和特殊括号
+    text = re.sub(r"[🎭🔍🧩🎙️🚀✨🏆📚📄🤖🎯🔊⚠️✅❌【】\[\]]", "", text)
+
+    # 兜底：仍残留的反斜杠、花括号
+    text = text.replace("\\", "").replace("{", "").replace("}", "")
+
+    # 连续空行折叠
+    text = re.sub(r"\n{2,}", "。 ", text)
+    text = re.sub(r"[ \t]+", " ", text)
+
+    # 只保留中英文、数字、常见标点
+    text = re.sub(r"[^\u4e00-\u9fff\w\s，。！？；：、,\.\!\?\;\:\-\+=/%\(\)（）]", "", text)
+
+    text = text.strip()
+    return text[:2500]  # 限制长度，防止 edge-tts 超时
+
+
 def generate_audio(text: str):
-    """Convert text to MP3 bytes via edge-tts in a dedicated thread."""
+    """Convert text to MP3 bytes via edge-tts，带重试和详细错误提示。"""
     import threading
 
     clean = _clean_tts(text)
+    if not clean or len(clean) < 2:
+        st.warning("⚠️ 清洗后的文本为空，无法生成语音")
+        return None
+
+    # 调试：把清洗后的文本存到 session_state，便于排查
+    st.session_state["_tts_debug_text"] = clean
+
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
         path = tmp.name
 
     result = {"ok": False, "error": ""}
 
     def _run():
-        import edge_tts
+        try:
+            import edge_tts
+        except ImportError:
+            result["error"] = "未安装 edge-tts，请运行: pip install edge-tts"
+            return
+
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         try:
-            comm = edge_tts.Communicate(clean, "zh-CN-YunxiNeural")
-            loop.run_until_complete(comm.save(path))
-            result["ok"] = True
+            # 重试 3 次（edge-tts 偶发 403/空响应）
+            last_err = None
+            for attempt in range(3):
+                try:
+                    comm = edge_tts.Communicate(
+                        clean,
+                        voice="zh-CN-YunxiNeural",
+                        rate="+0%",
+                        volume="+0%",
+                    )
+                    loop.run_until_complete(comm.save(path))
+                    if os.path.exists(path) and os.path.getsize(path) > 100:
+                        result["ok"] = True
+                        return
+                    last_err = "生成的音频文件为空"
+                except Exception as e:
+                    last_err = str(e)
+            result["error"] = f"重试 3 次仍失败: {last_err}"
         except Exception as e:
             result["error"] = str(e)
         finally:
@@ -414,16 +497,21 @@ def generate_audio(text: str):
 
     t = threading.Thread(target=_run, daemon=True)
     t.start()
-    t.join(timeout=60)
+    t.join(timeout=90)
 
     if result["ok"] and os.path.exists(path):
         with open(path, "rb") as f:
             data = f.read()
-        os.unlink(path)
+        try:
+            os.unlink(path)
+        except Exception:
+            pass
         return data
 
     if result["error"]:
         st.error(f"语音生成失败: {result['error']}")
+        with st.expander("🔧 查看清洗后的 TTS 文本（用于排查）"):
+            st.code(clean[:800], language="text")
     return None
 
 
