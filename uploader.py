@@ -6,6 +6,8 @@ import google.generativeai as genai
 from tqdm import tqdm
 from pathlib import Path
 import subprocess
+from PIL import Image
+import io
 
 try:
     from dotenv import load_dotenv
@@ -30,13 +32,41 @@ def extract_course_number(filename):
         return f"L{match.group(1)}"
     return "L00"
 
-def extract_images_from_pdf(pdf_path, output_dir):
+def is_likely_logo(image_bytes, min_size_kb=10, min_width=200, min_height=200):
+    """
+    判断图片是否可能是 logo 等无关图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB）
+        min_width: 最小宽度（像素）
+        min_height: 最小高度（像素）
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        if size_kb < min_size_kb:
+            return True
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            if width < min_width and height < min_height:
+                return True
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
     """
     使用 PyMuPDF 从 PDF 中提取所有图片
 
     Args:
         pdf_path: PDF 文件路径
         output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
 
     Returns:
         包含图片信息的列表
@@ -53,6 +83,9 @@ def extract_images_from_pdf(pdf_path, output_dir):
             base_image = doc.extract_image(xref)
             image_bytes = base_image["image"]
             image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
 
             image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
             image_path = os.path.join(output_dir, image_filename)
@@ -162,7 +195,7 @@ def push_to_github(local_repo_path, commit_message="Update question bank"):
         print(f"推送失败: {e}")
         return False
 
-def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False):
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
     """
     处理 PDF 文件并提取题目数据
 
@@ -171,6 +204,7 @@ def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False)
         api_key: Gemini API 密钥
         github_repo_path: GitHub 仓库本地路径（用于推送）
         auto_push: 是否处理完成后自动推送到 GitHub
+        filter_logo: 是否筛选掉 logo 等无关图片
     """
     model = configure_gemini(api_key)
 
@@ -194,7 +228,7 @@ def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False)
         print(f"\n处理文件: {pdf_file}")
         print(f"课程编号: {course_num}")
 
-        images = extract_images_from_pdf(pdf_path, images_dir)
+        images = extract_images_from_pdf(pdf_path, images_dir, filter_logo=filter_logo)
         print(f"提取到 {len(images)} 张图片")
 
         questions_data = []
@@ -279,6 +313,8 @@ GitHub Personal Access Token (PAT) 配置方法:
                         help='GitHub 仓库本地路径 (需要包含 .git 文件夹)')
     parser.add_argument('--auto-push', action='store_true',
                         help='处理完成后自动推送到 GitHub')
+    parser.add_argument('--no-filter-logo', action='store_true',
+                        help='不筛选 logo 等小图片（默认会筛选）')
 
     args = parser.parse_args()
 
@@ -319,5 +355,6 @@ GitHub Personal Access Token (PAT) 配置方法:
                 check=True, capture_output=True
             )
 
-    process_pdf_files(args.base_dir, api_key, args.github_repo, args.auto_push)
+    filter_logo = not args.no_filter_logo
+    process_pdf_files(args.base_dir, api_key, args.github_repo, args.auto_push, filter_logo=filter_logo)
     print("\n处理完成！")
