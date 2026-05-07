@@ -62,6 +62,29 @@ html, body,
 }
 [data-testid="stSidebar"] * { color: var(--text) !important; }
 
+/* Sidebar inputs: override the wildcard with explicit white text */
+[data-testid="stSidebar"] .stTextInput > div > div > input,
+[data-testid="stSidebar"] .stTextArea  > div > div > textarea {
+    background: #1C2E4A !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    caret-color: #F5C842 !important;
+}
+[data-testid="stSidebar"] .stTextInput > div > div > input::placeholder,
+[data-testid="stSidebar"] .stTextArea  > div > div > textarea::placeholder {
+    color: #6B82A8 !important;
+    -webkit-text-fill-color: #6B82A8 !important;
+}
+/* Password mask dots */
+[data-testid="stSidebar"] input[type="password"] {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+/* File uploader text inside sidebar */
+[data-testid="stSidebar"] [data-testid="stFileUploader"] * {
+    color: #D0DCF0 !important;
+}
+
 /* Hero */
 .hero-wrap { text-align:center; padding:2rem 1rem 1.2rem; }
 .hero-icon  { font-size:3.2rem; line-height:1; margin-bottom:.35rem; }
@@ -126,25 +149,43 @@ html, body,
     box-shadow:0 7px 22px rgba(245,200,66,.42) !important;
 }
 
-/* Inputs */
+/* Inputs — bright white text so it's readable on dark backgrounds */
 .stTextInput > div > div > input,
 .stTextArea  > div > div > textarea {
-    background:rgba(255,255,255,.055) !important;
-    border:1px solid var(--border) !important;
-    border-radius:10px !important; color:var(--text) !important;
-    font-family:'Noto Sans SC',sans-serif !important;
+    background: #1C2E4A !important;
+    border: 1px solid rgba(245,200,66,.35) !important;
+    border-radius: 10px !important;
+    color: #FFFFFF !important;
+    caret-color: #F5C842 !important;
+    font-family: 'Noto Sans SC', sans-serif !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+.stTextInput > div > div > input::placeholder,
+.stTextArea  > div > div > textarea::placeholder {
+    color: #6B82A8 !important;
+    -webkit-text-fill-color: #6B82A8 !important;
+    opacity: 1 !important;
 }
 .stTextInput > div > div > input:focus,
 .stTextArea  > div > div > textarea:focus {
-    border-color:var(--gold) !important;
-    box-shadow:0 0 0 2px rgba(245,200,66,.2) !important;
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 2px rgba(245,200,66,.2) !important;
+    background: #1E3356 !important;
 }
 
-/* File uploader */
+/* File uploader — text inside must be visible */
 [data-testid="stFileUploader"] {
-    background:rgba(245,200,66,.025) !important;
-    border:2px dashed rgba(245,200,66,.3) !important;
-    border-radius:14px !important;
+    background: rgba(245,200,66,.03) !important;
+    border: 2px dashed rgba(245,200,66,.35) !important;
+    border-radius: 14px !important;
+}
+[data-testid="stFileUploader"] * {
+    color: #D0DCF0 !important;
+}
+[data-testid="stFileUploader"] small,
+[data-testid="stFileUploader"] span,
+[data-testid="stFileUploader"] p {
+    color: #A0B4CC !important;
 }
 
 /* Tabs */
