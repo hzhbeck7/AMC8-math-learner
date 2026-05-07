@@ -345,22 +345,23 @@ def create_directory(github_token, dir_path):
         encoded_path = quote(gitkeep_path)
         url = f"https://api.github.com/repos/hzbeck7/AMC8-math-learner/contents/{encoded_path}"
         
-        response = requests.get(url, headers=headers)
-        st.info(f"检查目录: {current_path}, 状态码: {response.status_code}")
-        
-        if response.status_code == 404:
-            st.info(f"创建目录: {current_path}")
-            payload = {
-                "message": f"Create directory {current_path}",
-                "content": base64.b64encode(b"").decode('utf-8')
-            }
-            response = requests.put(url, headers=headers, json=payload)
-            st.info(f"创建结果: {response.status_code}, 响应: {response.text[:100]}")
-            if response.status_code != 201:
-                st.error(f"目录创建失败 {current_path}: {response.text}")
-                return False
-        else:
-            st.info(f"目录已存在: {current_path}")
+        try:
+            response = requests.get(url, headers=headers, timeout=10)
+            
+            if response.status_code == 404:
+                payload = {
+                    "message": f"Create directory {current_path}",
+                    "content": base64.b64encode(b"").decode('utf-8')
+                }
+                response = requests.put(url, headers=headers, json=payload, timeout=10)
+                
+                if response.status_code not in [201, 200]:
+                    st.error(f"创建目录失败 {current_path}: {response.status_code} - {response.text}")
+                    return False
+                    
+        except Exception as e:
+            st.error(f"目录操作失败 {current_path}: {e}")
+            return False
     
     return True
 
@@ -724,10 +725,16 @@ def admin_panel():
                     data_dir = f"data/questions/data/{course_num}"
                     
                     status_text.text(f"📁 创建目录: {image_dir}")
-                    create_directory(github_token, image_dir)
+                    success = create_directory(github_token, image_dir)
+                    if not success:
+                        st.error(f"❌ 目录创建失败: {image_dir}")
+                        return
                     
                     status_text.text(f"📁 创建目录: {data_dir}")
-                    create_directory(github_token, data_dir)
+                    success = create_directory(github_token, data_dir)
+                    if not success:
+                        st.error(f"❌ 目录创建失败: {data_dir}")
+                        return
                 
                 total_pages = 0
                 all_images = {}
