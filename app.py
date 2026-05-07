@@ -62,7 +62,7 @@ html, body,
 }
 [data-testid="stSidebar"] * { color: var(--text) !important; }
 
-/* Sidebar inputs: override the wildcard with explicit white text */
+/* Sidebar inputs */
 [data-testid="stSidebar"] .stTextInput > div > div > input,
 [data-testid="stSidebar"] .stTextArea  > div > div > textarea {
     background: #1C2E4A !important;
@@ -75,12 +75,10 @@ html, body,
     color: #6B82A8 !important;
     -webkit-text-fill-color: #6B82A8 !important;
 }
-/* Password mask dots */
 [data-testid="stSidebar"] input[type="password"] {
     color: #FFFFFF !important;
     -webkit-text-fill-color: #FFFFFF !important;
 }
-/* File uploader text inside sidebar */
 [data-testid="stSidebar"] [data-testid="stFileUploader"] * {
     color: #D0DCF0 !important;
 }
@@ -149,7 +147,7 @@ html, body,
     box-shadow:0 7px 22px rgba(245,200,66,.42) !important;
 }
 
-/* Inputs — bright white text so it's readable on dark backgrounds */
+/* Inputs */
 .stTextInput > div > div > input,
 .stTextArea  > div > div > textarea {
     background: #1C2E4A !important;
@@ -173,7 +171,7 @@ html, body,
     background: #1E3356 !important;
 }
 
-/* File uploader — text inside must be visible */
+/* File uploader */
 [data-testid="stFileUploader"] {
     background: rgba(245,200,66,.03) !important;
     border: 2px dashed rgba(245,200,66,.35) !important;
@@ -327,12 +325,7 @@ def _clean_tts(text: str) -> str:
 
 
 def generate_audio(text: str):
-    """Convert text to MP3 bytes via edge-tts.
-
-    Streamlit already runs an event loop, so asyncio.run() raises
-    'This event loop is already running'. We work around it by
-    spinning up a brand-new loop inside a dedicated daemon thread.
-    """
+    """Convert text to MP3 bytes via edge-tts in a dedicated thread."""
     import threading
 
     clean = _clean_tts(text)
@@ -400,9 +393,12 @@ def parse_sections(text: str) -> dict:
 
 
 # ─── Render result ────────────────────────────────────────────────────────────────
-def render_result(result_text: str):
-    """Render AI answer cards. Audio bytes are kept in session_state so they
-    survive Streamlit reruns triggered by button clicks."""
+def render_result(result_text: str, key_suffix: str = "default"):
+    """Render AI answer cards.
+
+    `key_suffix` 用于给按钮和 session_state 中的音频数据做命名空间隔离，
+    防止在不同入口（题库/图片/文字）同时渲染时产生重复 key 错误。
+    """
     sec = parse_sections(result_text)
 
     if sec.get("theater"):
@@ -415,23 +411,25 @@ def render_result(result_text: str):
 
     # ── Voice button ──────────────────────────────────────────────────────────
     tts_src = (sec.get("theater", "") + "\n\n" + sec.get("logic", "")).strip()
+    audio_key = f"tts_audio_{key_suffix}"
+    error_key = f"tts_error_{key_suffix}"
+    btn_key = f"voice_play_{key_suffix}"
+
     if tts_src:
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
-            if st.button("🔊 听听教练怎么说", key="voice_play", use_container_width=True):
-                # Clear any previous audio so user sees spinner freshly
-                st.session_state.pop("tts_audio", None)
+            if st.button("🔊 听听教练怎么说", key=btn_key, use_container_width=True):
+                st.session_state.pop(audio_key, None)
                 with st.spinner("🎙️ 云希老师正在录音，稍等..."):
                     audio_bytes = generate_audio(tts_src)
                 if audio_bytes:
-                    st.session_state["tts_audio"] = audio_bytes
+                    st.session_state[audio_key] = audio_bytes
                 else:
-                    st.session_state["tts_error"] = True
+                    st.session_state[error_key] = True
 
-        # Always replay cached audio if present (survives rerun)
-        if st.session_state.get("tts_audio"):
-            st.audio(st.session_state["tts_audio"], format="audio/mp3")
-        if st.session_state.pop("tts_error", False):
+        if st.session_state.get(audio_key):
+            st.audio(st.session_state[audio_key], format="audio/mp3")
+        if st.session_state.pop(error_key, False):
             st.error("语音生成失败，请确保已安装 edge-tts（pip install edge-tts）")
 
     if sec.get("coach"):
@@ -455,6 +453,13 @@ def render_result(result_text: str):
 <div class="sc" style="border-color:rgba(245,200,66,.35);">
   <div class="sc-body">{result_text.replace(chr(10), '<br>')}</div>
 </div>""", unsafe_allow_html=True)
+
+
+def _clear_tts_cache():
+    """清空所有 tts 相关的 session_state，防止新题残留旧音频。"""
+    for k in list(st.session_state.keys()):
+        if k.startswith("tts_audio_") or k.startswith("tts_error_"):
+            st.session_state.pop(k, None)
 
 
 # ─── Sidebar ─────────────────────────────────────────────────────────────────────
@@ -500,6 +505,8 @@ def render_sidebar() -> str:
                 label = f"#{q.get('id', i+1)} [{q.get('topic','?')}] {q.get('title', '题目')[:16]}"
                 if st.button(label, key=f"qb_{i}"):
                     st.session_state["qbank_selected"] = q
+                    st.session_state["ai_result"] = None  # 重置，由主流程重新分析
+                    _clear_tts_cache()
         else:
             st.markdown(
                 '<p style="color:#4A5F80;font-size:.8rem;margin:.3rem 0;">'
@@ -558,7 +565,8 @@ def render_sidebar() -> str:
 
 # ─── Main ─────────────────────────────────────────────────────────────────────────
 def main():
-    for k in ("qbank_selected", "ai_result", "tts_audio"):
+    # 初始化 session_state
+    for k in ("qbank_selected", "ai_result", "last_source"):
         if k not in st.session_state:
             st.session_state[k] = None
 
@@ -573,7 +581,7 @@ def main():
   <span class="hero-badge">✨ 幽默教练 AI 驱动 · 让每道题都有故事</span>
 </div>""", unsafe_allow_html=True)
 
-    # Q-bank selected question
+    # ── 题库题目分支（优先处理） ────────────────────────────────────────────────
     if st.session_state.get("qbank_selected"):
         q = st.session_state.pop("qbank_selected")
         st.markdown(f"""
@@ -589,18 +597,25 @@ def main():
         if not api_key:
             st.warning("请在左侧边栏输入 Gemini API Key")
         else:
-            st.session_state["tts_audio"] = None
+            _clear_tts_cache()
             with st.spinner("🧠 AI 教练正在认真读题中..."):
                 try:
-                    qbank_result = analyze_question(api_key, [f"请分析以下AMC 8题目：\n\n{q.get('content','')}"])
+                    qbank_result = analyze_question(
+                        api_key,
+                        [f"请分析以下AMC 8题目：\n\n{q.get('content','')}"]
+                    )
                     st.session_state["ai_result"] = qbank_result
-                    render_result(qbank_result)
+                    st.session_state["last_source"] = "qbank"
+                    render_result(qbank_result, key_suffix="qbank")
                 except Exception as e:
                     st.error(f"分析出错: {e}")
-        st.markdown('<div class="footer"><p>🏆 AMC 8 智学助手 · Powered by Gemini 2.5 Flash & Edge-TTS</p></div>', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="footer"><p>🏆 AMC 8 智学助手 · Powered by Gemini 2.5 Flash & Edge-TTS</p></div>',
+            unsafe_allow_html=True
+        )
         return
 
-    # Input tabs
+    # ── 输入 Tab ─────────────────────────────────────────────────────────────
     tab_img, tab_txt = st.tabs(["📤 上传图片 / PDF", "✏️ 手动输入题目"])
 
     with tab_img:
@@ -649,19 +664,17 @@ def main():
                 with c2:
                     go = st.button("🚀 开始智能解题", use_container_width=True, key="go_img")
                 if go:
-                    st.session_state["tts_audio"] = None  # reset audio on new question
+                    _clear_tts_cache()
                     with st.spinner("🧠 AI 教练正在认真读题，好题值得细品..."):
                         try:
                             st.session_state["ai_result"] = analyze_question(
                                 api_key,
                                 ["请分析图片中的数学题目，按格式详细解答："] + content_parts
                             )
+                            st.session_state["last_source"] = "img"
                         except Exception as e:
                             st.error(f"解析失败: {e}")
                             st.session_state["ai_result"] = None
-                if st.session_state.get("ai_result"):
-                    st.divider()
-                    render_result(st.session_state["ai_result"])
 
     with tab_txt:
         st.markdown(
@@ -690,19 +703,22 @@ def main():
                 if not q_text.strip():
                     st.warning("请输入题目内容")
                 else:
-                    st.session_state["tts_audio"] = None  # reset audio on new question
+                    _clear_tts_cache()
                     with st.spinner("🧠 AI 教练正在思考中，冷笑话准备就绪..."):
                         try:
                             st.session_state["ai_result"] = analyze_question(
                                 api_key,
                                 [f"请分析以下AMC 8题目：\n\n{q_text}"]
                             )
+                            st.session_state["last_source"] = "txt"
                         except Exception as e:
                             st.error(f"解析失败: {e}")
                             st.session_state["ai_result"] = None
-            if st.session_state.get("ai_result"):
-                st.divider()
-                render_result(st.session_state["ai_result"])
+
+    # ── 统一渲染结果（放在 tab 外只调用一次，避免重复 key） ──────────────────────
+    if st.session_state.get("ai_result"):
+        st.divider()
+        render_result(st.session_state["ai_result"], key_suffix="main")
 
     st.markdown("""
 <div class="footer">
