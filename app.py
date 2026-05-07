@@ -329,6 +329,35 @@ def analyze_image_with_gemini(model, image_bytes):
         }
 
 
+def create_directory(github_token, dir_path):
+    headers = {
+        "Authorization": f"token {github_token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    
+    parts = dir_path.split('/')
+    current_path = ""
+    
+    for part in parts:
+        current_path = f"{current_path}/{part}" if current_path else part
+        
+        gitkeep_path = f"{current_path}/.gitkeep"
+        encoded_path = quote(gitkeep_path)
+        url = f"https://api.github.com/repos/hzbeck7/AMC8-math-learner/contents/{encoded_path}"
+        
+        response = requests.get(url, headers=headers)
+        if response.status_code == 404:
+            payload = {
+                "message": f"Create directory {current_path}",
+                "content": base64.b64encode(b"").decode('utf-8')
+            }
+            response = requests.put(url, headers=headers, json=payload)
+            if response.status_code != 201:
+                return False
+    
+    return True
+
+
 def upload_to_github(github_token, path, content, message):
     encoded_path = quote(path)
     url = f"https://api.github.com/repos/hzbeck7/AMC8-math-learner/contents/{encoded_path}"
@@ -354,6 +383,12 @@ def upload_to_github(github_token, path, content, message):
             payload["sha"] = response.json()["sha"]
         
         response = requests.put(url, headers=headers, json=payload)
+        
+        if response.status_code == 404:
+            dir_path = os.path.dirname(path)
+            create_directory(github_token, dir_path)
+            response = requests.put(url, headers=headers, json=payload)
+        
         response.raise_for_status()
         return True
     except Exception as e:
