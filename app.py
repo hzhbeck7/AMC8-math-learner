@@ -401,6 +401,8 @@ def parse_sections(text: str) -> dict:
 
 # ─── Render result ────────────────────────────────────────────────────────────────
 def render_result(result_text: str):
+    """Render AI answer cards. Audio bytes are kept in session_state so they
+    survive Streamlit reruns triggered by button clicks."""
     sec = parse_sections(result_text)
 
     if sec.get("theater"):
@@ -411,18 +413,26 @@ def render_result(result_text: str):
   <div class="sc-body">{sec['theater'].replace(chr(10), '<br>')}</div>
 </div>""", unsafe_allow_html=True)
 
-    # Voice button
+    # ── Voice button ──────────────────────────────────────────────────────────
     tts_src = (sec.get("theater", "") + "\n\n" + sec.get("logic", "")).strip()
     if tts_src:
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
             if st.button("🔊 听听教练怎么说", key="voice_play", use_container_width=True):
+                # Clear any previous audio so user sees spinner freshly
+                st.session_state.pop("tts_audio", None)
                 with st.spinner("🎙️ 云希老师正在录音，稍等..."):
-                    audio = generate_audio(tts_src)
-                if audio:
-                    st.audio(audio, format="audio/mp3")
+                    audio_bytes = generate_audio(tts_src)
+                if audio_bytes:
+                    st.session_state["tts_audio"] = audio_bytes
                 else:
-                    st.error("语音生成失败，请确保已安装 edge-tts（pip install edge-tts）")
+                    st.session_state["tts_error"] = True
+
+        # Always replay cached audio if present (survives rerun)
+        if st.session_state.get("tts_audio"):
+            st.audio(st.session_state["tts_audio"], format="audio/mp3")
+        if st.session_state.pop("tts_error", False):
+            st.error("语音生成失败，请确保已安装 edge-tts（pip install edge-tts）")
 
     if sec.get("coach"):
         st.markdown(f"""
@@ -548,7 +558,7 @@ def render_sidebar() -> str:
 
 # ─── Main ─────────────────────────────────────────────────────────────────────────
 def main():
-    for k in ("qbank_selected",):
+    for k in ("qbank_selected", "ai_result", "tts_audio"):
         if k not in st.session_state:
             st.session_state[k] = None
 
@@ -579,10 +589,12 @@ def main():
         if not api_key:
             st.warning("请在左侧边栏输入 Gemini API Key")
         else:
+            st.session_state["tts_audio"] = None
             with st.spinner("🧠 AI 教练正在认真读题中..."):
                 try:
-                    result = analyze_question(api_key, [f"请分析以下AMC 8题目：\n\n{q.get('content','')}"])
-                    render_result(result)
+                    qbank_result = analyze_question(api_key, [f"请分析以下AMC 8题目：\n\n{q.get('content','')}"])
+                    st.session_state["ai_result"] = qbank_result
+                    render_result(qbank_result)
                 except Exception as e:
                     st.error(f"分析出错: {e}")
         st.markdown('<div class="footer"><p>🏆 AMC 8 智学助手 · Powered by Gemini 2.5 Flash & Edge-TTS</p></div>', unsafe_allow_html=True)
@@ -637,18 +649,19 @@ def main():
                 with c2:
                     go = st.button("🚀 开始智能解题", use_container_width=True, key="go_img")
                 if go:
+                    st.session_state["tts_audio"] = None  # reset audio on new question
                     with st.spinner("🧠 AI 教练正在认真读题，好题值得细品..."):
                         try:
-                            result = analyze_question(
+                            st.session_state["ai_result"] = analyze_question(
                                 api_key,
                                 ["请分析图片中的数学题目，按格式详细解答："] + content_parts
                             )
                         except Exception as e:
                             st.error(f"解析失败: {e}")
-                            result = None
-                    if result:
-                        st.divider()
-                        render_result(result)
+                            st.session_state["ai_result"] = None
+                if st.session_state.get("ai_result"):
+                    st.divider()
+                    render_result(st.session_state["ai_result"])
 
     with tab_txt:
         st.markdown(
@@ -677,18 +690,19 @@ def main():
                 if not q_text.strip():
                     st.warning("请输入题目内容")
                 else:
+                    st.session_state["tts_audio"] = None  # reset audio on new question
                     with st.spinner("🧠 AI 教练正在思考中，冷笑话准备就绪..."):
                         try:
-                            result = analyze_question(
+                            st.session_state["ai_result"] = analyze_question(
                                 api_key,
                                 [f"请分析以下AMC 8题目：\n\n{q_text}"]
                             )
                         except Exception as e:
                             st.error(f"解析失败: {e}")
-                            result = None
-                    if result:
-                        st.divider()
-                        render_result(result)
+                            st.session_state["ai_result"] = None
+            if st.session_state.get("ai_result"):
+                st.divider()
+                render_result(st.session_state["ai_result"])
 
     st.markdown("""
 <div class="footer">
