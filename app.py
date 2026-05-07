@@ -345,15 +345,23 @@ def create_directory(github_token, dir_path):
         encoded_path = quote(gitkeep_path)
         url = f"https://api.github.com/repos/hzbeck7/AMC8-math-learner/contents/{encoded_path}"
         
-        response = requests.get(url, headers=headers)
-        if response.status_code == 404:
-            payload = {
-                "message": f"Create directory {current_path}",
-                "content": base64.b64encode(b"").decode('utf-8')
-            }
-            response = requests.put(url, headers=headers, json=payload)
-            if response.status_code != 201:
-                return False
+        try:
+            response = requests.get(url, headers=headers, timeout=10)
+            
+            if response.status_code == 404:
+                payload = {
+                    "message": f"Create directory {current_path}",
+                    "content": base64.b64encode(b"").decode('utf-8')
+                }
+                response = requests.put(url, headers=headers, json=payload, timeout=10)
+                
+                if response.status_code not in [201, 200]:
+                    st.error(f"创建目录失败 {current_path}: {response.status_code} - {response.text}")
+                    return False
+                    
+        except Exception as e:
+            st.error(f"目录操作失败 {current_path}: {e}")
+            return False
     
     return True
 
@@ -386,8 +394,17 @@ def upload_to_github(github_token, path, content, message):
         
         if response.status_code == 404:
             dir_path = os.path.dirname(path)
-            create_directory(github_token, dir_path)
-            response = requests.put(url, headers=headers, json=payload)
+            st.info(f"目录不存在，正在创建: {dir_path}")
+            success = create_directory(github_token, dir_path)
+            if success:
+                st.info(f"目录创建成功")
+                response = requests.get(url, headers=headers)
+                if response.status_code == 200:
+                    payload["sha"] = response.json()["sha"]
+                response = requests.put(url, headers=headers, json=payload)
+            else:
+                st.error(f"目录创建失败: {dir_path}")
+                return False
         
         response.raise_for_status()
         return True
@@ -670,6 +687,18 @@ def admin_panel():
         if admin_password == st.secrets.get("ADMIN_PASSWORD", "admin123"):
             st.success("✅ 身份验证通过")
             
+            github_token = st.secrets.get("GITHUB_TOKEN", "")
+            gemini_key = st.secrets.get("GEMINI_API_KEY", "")
+            
+            if not github_token:
+                st.error("❌ 未配置 GitHub Token，请在 Streamlit Secrets 中设置")
+                return
+            if not gemini_key:
+                st.error("❌ 未配置 Gemini API Key，请在 Streamlit Secrets 中设置")
+                return
+            
+            st.success("✅ GitHub Token 和 Gemini API Key 已配置")
+            
             st.markdown("---")
             st.markdown("### 📤 上传题库")
             
@@ -680,35 +709,32 @@ def admin_panel():
                 key="admin_pdf_uploader"
             )
             
-            github_token = st.text_input(
-                "GitHub Token",
-                type="password",
-                placeholder="输入 GitHub Token",
-                key="github_token",
-                value=st.secrets.get("GITHUB_TOKEN", "")
-            )
-            
-            gemini_key = st.text_input(
-                "Gemini API Key",
-                type="password",
-                placeholder="输入 Gemini API Key",
-                key="gemini_admin_key",
-                value=st.secrets.get("GEMINI_API_KEY", "")
-            )
-            
             if st.button("🚀 开始入库", key="start_upload"):
                 if not uploaded_pdfs:
                     st.error("请先上传 PDF 文件")
                     return
-                if not github_token:
-                    st.error("请输入 GitHub Token")
-                    return
-                if not gemini_key:
-                    st.error("请输入 Gemini API Key")
-                    return
                 
                 progress_bar = st.progress(0)
                 status_text = st.empty()
+                
+                status_text.text("📁 正在创建目录结构...")
+                
+                for pdf_file in uploaded_pdfs:
+                    course_num = extract_course_number(pdf_file.name)
+                    image_dir = f"data/questions/images/{course_num}"
+                    data_dir = f"data/questions/data/{course_num}"
+                    
+                    status_text.text(f"📁 创建目录: {image_dir}")
+                    success = create_directory(github_token, image_dir)
+                    if not success:
+                        st.error(f"❌ 目录创建失败: {image_dir}")
+                        return
+                    
+                    status_text.text(f"📁 创建目录: {data_dir}")
+                    success = create_directory(github_token, data_dir)
+                    if not success:
+                        st.error(f"❌ 目录创建失败: {data_dir}")
+                        return
                 
                 total_pages = 0
                 all_images = {}
