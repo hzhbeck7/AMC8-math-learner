@@ -356,7 +356,7 @@ def create_directory(github_token, dir_path):
                 response = requests.put(url, headers=headers, json=payload, timeout=10)
                 
                 if response.status_code not in [201, 200]:
-                    st.error(f"创建目录失败 {current_path}: {response.status_code} - {response.text}")
+                    st.error(f"目录创建失败 {current_path}: {response.text}")
                     return False
                     
         except Exception as e:
