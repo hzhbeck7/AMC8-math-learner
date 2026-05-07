@@ -195,7 +195,11 @@ hr { border-color:var(--border) !important; margin:1.4rem 0 !important; }
 
 
 # ─── Constants ────────────────────────────────────────────────────────────────────
-ADMIN_PASSWORD = "amc8admin2025"
+def get_admin_password() -> str:
+    try:
+        return st.secrets["ADMIN_PASSWORD"]
+    except Exception:
+        return os.environ.get("ADMIN_PASSWORD", "amc8admin2025")
 QUESTION_BANK_FILE = "question_bank.json"
 
 
@@ -251,14 +255,14 @@ TUTOR_PROMPT = """你是一位风趣幽默、充满激情的奥数教练，专�
 
 def analyze_question(api_key: str, parts: list) -> str:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-2.5-flash-preview-05-20")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content([TUTOR_PROMPT] + parts)
     return response.text
 
 
 def extract_questions_from_pdf(api_key: str, images: list) -> dict:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-2.5-flash-preview-05-20")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     prompt = (
         "请从这些PDF页面中提取所有数学题目，以纯JSON格式返回（不要加```代码块标记）。\n"
         '格式：{"questions":[{"id":1,"title":"编号或标题","content":"完整题目含选项",'
@@ -438,7 +442,7 @@ def render_sidebar() -> str:
         st.markdown('<p class="sb-label">⚙️ 管理后台</p>', unsafe_allow_html=True)
         with st.expander("🔐 管理员登录", expanded=False):
             pwd = st.text_input("管理员密码", type="password", key="admin_pwd_input")
-            if pwd == ADMIN_PASSWORD:
+            if pwd == get_admin_password():
                 st.success("✅ 已登录管理后台")
                 st.markdown("**上传题库 PDF**")
                 pdf_file = st.file_uploader("选择 PDF", type=["pdf"], key="admin_pdf")
