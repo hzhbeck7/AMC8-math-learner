@@ -21,7 +21,7 @@ def configure_gemini(api_key):
     配置 Google Gemini API
     """
     genai.configure(api_key=api_key)
-    return genai.GenerativeModel('gemini-2.0-flash')
+    return genai.GenerativeModel('gemini-1.5-flash')
 
 def extract_course_number(filename):
     """
