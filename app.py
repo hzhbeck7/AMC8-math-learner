@@ -285,26 +285,46 @@ def _clean_tts(text: str) -> str:
     return text.strip()[:3500]
 
 
-async def _tts_async(text: str, path: str) -> bool:
-    try:
-        import edge_tts
-        comm = edge_tts.Communicate(text, "zh-CN-YunxiNeural")
-        await comm.save(path)
-        return True
-    except Exception:
-        return False
-
-
 def generate_audio(text: str):
+    """Convert text to MP3 bytes via edge-tts.
+
+    Streamlit already runs an event loop, so asyncio.run() raises
+    'This event loop is already running'. We work around it by
+    spinning up a brand-new loop inside a dedicated daemon thread.
+    """
+    import threading
+
     clean = _clean_tts(text)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
         path = tmp.name
-    ok = asyncio.run(_tts_async(clean, path))
-    if ok and os.path.exists(path):
+
+    result = {"ok": False, "error": ""}
+
+    def _run():
+        import edge_tts
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            comm = edge_tts.Communicate(clean, "zh-CN-YunxiNeural")
+            loop.run_until_complete(comm.save(path))
+            result["ok"] = True
+        except Exception as e:
+            result["error"] = str(e)
+        finally:
+            loop.close()
+
+    t = threading.Thread(target=_run, daemon=True)
+    t.start()
+    t.join(timeout=60)
+
+    if result["ok"] and os.path.exists(path):
         with open(path, "rb") as f:
             data = f.read()
         os.unlink(path)
         return data
+
+    if result["error"]:
+        st.error(f"语音生成失败: {result['error']}")
     return None
 
 
