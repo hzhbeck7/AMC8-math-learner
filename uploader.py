@@ -397,3 +397,12861 @@ GitHub Personal Access Token (PAT) 配置方法:
     filter_logo = not args.no_filter_logo
     process_pdf_files(args.base_dir, api_key, args.github_repo, args.auto_push, filter_logo=filter_logo)
     print("\n处理完成！")
+import os
+import reimport os
+import re
+import json
+import fitz
+import googleimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm importimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    loadimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .envimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_geminiimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Geminiimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(modelimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {modelimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match =import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})',import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "Limport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes,import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logoimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as imgimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width <import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDFimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logoimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images =import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        imageimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_imageimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytesimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext =import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_numimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(imageimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.closeimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.uploadimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_textimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reasonimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4.import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = modelimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolveimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(responseimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "questionimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_pointsimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bankimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commitimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocessimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.stripimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m',import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True,import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, textimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Gitimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderrimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes)import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repoimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件并提取题目数据
+
+    Args:
+        baseimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件并提取题目数据
+
+    Args:
+        base_dir: PDF 文件所在目录
+        apiimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件并提取题目数据
+
+    Args:
+        base_dir: PDF 文件所在目录
+        api_key: Gemini API 密钥
+        github_repo_path: GitHub 仓库本地路径（用于import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件并提取题目数据
+
+    Args:
+        base_dir: PDF 文件所在目录
+        api_key: Gemini API 密钥
+        github_repo_path: GitHub 仓库本地路径（用于推送）
+        auto_push: 是否处理完成后自动import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件并提取题目数据
+
+    Args:
+        base_dir: PDF 文件所在目录
+        api_key: Gemini API 密钥
+        github_repo_path: GitHub 仓库本地路径（用于推送）
+        auto_push: 是否处理完成后自动推送到 GitHub
+        filter_logo: 是否筛选import os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件并提取题目数据
+
+    Args:
+        base_dir: PDF 文件所在目录
+        api_key: Gemini API 密钥
+        github_repo_path: GitHub 仓库本地路径（用于推送）
+        auto_push: 是否处理完成后自动推送到 GitHub
+        filter_logo: 是否筛选掉 logo 等无关图片
+    """
+    model = configure_gemini(api_key)
+
+    pdfimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件并提取题目数据
+
+    Args:
+        base_dir: PDF 文件所在目录
+        api_key: Gemini API 密钥
+        github_repo_path: GitHub 仓库本地路径（用于推送）
+        auto_push: 是否处理完成后自动推送到 GitHub
+        filter_logo: 是否筛选掉 logo 等无关图片
+    """
+    model = configure_gemini(api_key)
+
+    pdf_pattern = re.compile(r'^AMC8\simport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件并提取题目数据
+
+    Args:
+        base_dir: PDF 文件所在目录
+        api_key: Gemini API 密钥
+        github_repo_path: GitHub 仓库本地路径（用于推送）
+        auto_push: 是否处理完成后自动推送到 GitHub
+        filter_logo: 是否筛选掉 logo 等无关图片
+    """
+    model = configure_gemini(api_key)
+
+    pdf_pattern = re.compile(r'^AMC8\s*L\d{2}.*\.pdf$', reimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件并提取题目数据
+
+    Args:
+        base_dir: PDF 文件所在目录
+        api_key: Gemini API 密钥
+        github_repo_path: GitHub 仓库本地路径（用于推送）
+        auto_push: 是否处理完成后自动推送到 GitHub
+        filter_logo: 是否筛选掉 logo 等无关图片
+    """
+    model = configure_gemini(api_key)
+
+    pdf_pattern = re.compile(r'^AMC8\s*L\d{2}.*\.pdf$', re.IGNORECASE)
+    pdf_files = sorted([f for f in os.listdir(base_dir) if pdfimport os
+import re
+import json
+import fitz
+import google.generativeai as genai
+from tqdm import tqdm
+from pathlib import Path
+import subprocess
+from PIL import Image
+import io
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
+def configure_gemini(api_key):
+    """
+    配置 Google Gemini API，支持多个模型回退
+    """
+    genai.configure(api_key=api_key)
+    
+    models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-exp',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro-vision',
+    ]
+    
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            print(f"使用模型: {model_name}")
+            return model
+        except Exception as e:
+            print(f"模型 {model_name} 不可用: {e}")
+            continue
+    
+    raise Exception("没有可用的模型，请检查 API 密钥或网络连接")
+
+def extract_course_number(filename):
+    """
+    从文件名中提取课程编号（L01, L02 等）
+    """
+    match = re.search(r'L(\d{2})', filename)
+    if match:
+        return f"L{match.group(1)}"
+    return "L00"
+
+def is_likely_logo(image_bytes, min_size_kb=5, min_dimension=50):
+    """
+    判断图片是否可能是 logo 等无关图片（保守筛选）
+    
+    只过滤非常小的图标，保留大部分图片
+
+    Args:
+        image_bytes: 图片二进制数据
+        min_size_kb: 最小文件大小（KB），默认 5KB
+        min_dimension: 最小边长（像素），默认 50px
+
+    Returns:
+        如果可能是 logo 则返回 True，否则返回 False
+    """
+    try:
+        size_kb = len(image_bytes) / 1024
+        
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            width, height = img.size
+            
+            if size_kb < min_size_kb and width < min_dimension and height < min_dimension:
+                return True
+                
+    except Exception:
+        pass
+    
+    return False
+
+def extract_images_from_pdf(pdf_path, output_dir, filter_logo=True):
+    """
+    使用 PyMuPDF 从 PDF 中提取所有图片
+
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 图片输出目录
+        filter_logo: 是否筛选掉 logo 等无关图片
+
+    Returns:
+        包含图片信息的列表
+    """
+    images = []
+    doc = fitz.open(pdf_path)
+
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+
+            if filter_logo and is_likely_logo(image_bytes):
+                continue
+
+            image_filename = f"page_{page_num + 1}_{img_index + 1}.{image_ext}"
+            image_path = os.path.join(output_dir, image_filename)
+
+            with open(image_path, "wb") as f:
+                f.write(image_bytes)
+
+            images.append({
+                "page_number": page_num + 1,
+                "image_path": image_path,
+                "image_filename": image_filename
+            })
+
+    doc.close()
+    return images
+
+def analyze_image_with_gemini(model, image_path):
+    """
+    使用 Gemini 分析图片中的题目内容
+
+    Args:
+        model: 已配置的 Gemini 模型
+        image_path: 图片路径
+
+    Returns:
+        包含题目分析结果的字典
+    """
+    try:
+        image = genai.upload_file(image_path)
+        prompt = """
+        请分析这张图片中的数学题目内容，返回以下格式的 JSON：
+
+        {
+            "question_text": "题目的完整文本内容",
+            "knowledge_points": ["知识点1", "知识点2", "知识点3"],
+            "difficulty": "简单|中等|困难",
+            "difficulty_reason": "难度评估的理由"
+        }
+
+        注意：
+        1. 题目文本要完整准确地包含所有题目内容和选项
+        2. 知识点要具体，如"代数方程"、"几何图形"等
+        3. 难度基于 AMC8 竞赛标准评估
+        4. 必须返回有效的 JSON 格式，不要包含其他内容
+        """
+
+        response = model.generate_content([prompt, image])
+        response.resolve()
+
+        try:
+            result = json.loads(response.text.strip())
+            return result
+        except json.JSONDecodeError:
+            return {
+                "question_text": response.text.strip(),
+                "knowledge_points": [],
+                "difficulty": "未知",
+                "difficulty_reason": "解析失败"
+            }
+    except Exception as e:
+        return {
+            "question_text": "",
+            "knowledge_points": [],
+            "difficulty": "未知",
+            "difficulty_reason": f"API调用失败: {str(e)}"
+        }
+
+def push_to_github(local_repo_path, commit_message="Update question bank"):
+    """
+    使用 Git 命令将本地更改推送到 GitHub 仓库
+
+    Args:
+        local_repo_path: 本地仓库路径（包含 .git 文件夹）
+        commit_message: 提交信息
+
+    Returns:
+        是否成功
+    """
+    try:
+        os.chdir(local_repo_path)
+
+        subprocess.run(['git', 'add', 'dist/'], check=True, capture_output=True)
+
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            capture_output=True,
+            text=True
+        )
+
+        if not result.stdout.strip():
+            print("没有检测到文件变更，跳过提交")
+            return True
+
+        subprocess.run(['git', 'commit', '-m', commit_message], check=True, capture_output=True, text=True)
+
+        subprocess.run(['git', 'push'], check=True, capture_output=True, text=True)
+
+        print("成功推送到 GitHub！")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git 操作失败: {e}")
+        if e.stderr:
+            print(f"错误详情: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}")
+        return False
+    except Exception as e:
+        print(f"推送失败: {e}")
+        return False
+
+def process_pdf_files(base_dir, api_key, github_repo_path=None, auto_push=False, filter_logo=True):
+    """
+    处理 PDF 文件并提取题目数据
+
+    Args:
+        base_dir: PDF 文件所在目录
+        api_key: Gemini API 密钥
+        github_repo_path: GitHub 仓库本地路径（用于推送）
+        auto_push: 是否处理完成后自动推送到 GitHub
+        filter_logo: 是否筛选掉 logo 等无关图片
+    """
+    model = configure_gemini(api_key)
+
+    pdf_pattern = re.compile(r'^AMC8\s*L\d{2}.*\.pdf$', re.IGNORECASE)
+    pdf_files = sorted([f for f in os.listdir(base_dir) if pdf_pattern.match(f)])
+
+    if not pdf_files:
