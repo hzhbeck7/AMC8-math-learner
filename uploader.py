@@ -7,6 +7,13 @@ from tqdm import tqdm
 from pathlib import Path
 import subprocess
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("已加载 .env 文件")
+except ImportError:
+    print("提示：未安装 python-dotenv，将使用环境变量或命令行参数")
+
 def configure_gemini(api_key):
     """
     配置 Google Gemini API
