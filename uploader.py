@@ -23,6 +23,9 @@ def configure_gemini(api_key):
     genai.configure(api_key=api_key)
     
     models_to_try = [
+        'gemini-2.5-flash',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
         'gemini-2.0-flash-exp',
         'gemini-1.5-flash',
         'gemini-1.5-pro',
