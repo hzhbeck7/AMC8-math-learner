@@ -716,6 +716,19 @@ def admin_panel():
                 progress_bar = st.progress(0)
                 status_text = st.empty()
                 
+                status_text.text("📁 正在创建目录结构...")
+                
+                for pdf_file in uploaded_pdfs:
+                    course_num = extract_course_number(pdf_file.name)
+                    image_dir = f"data/questions/images/{course_num}"
+                    data_dir = f"data/questions/data/{course_num}"
+                    
+                    status_text.text(f"📁 创建目录: {image_dir}")
+                    create_directory(github_token, image_dir)
+                    
+                    status_text.text(f"📁 创建目录: {data_dir}")
+                    create_directory(github_token, data_dir)
+                
                 total_pages = 0
                 all_images = {}
                 
