@@ -1,18 +1,6 @@
-# AMC 8 智学助手 — Python 依赖
-# 安装: pip install -r requirements.txt
-
+# AMC 8 智学助手 — MVP 依赖（最小化）
 streamlit>=1.35.0
 google-generativeai>=0.8.0
 edge-tts>=6.1.10
 Pillow>=10.0.0
 PyMuPDF>=1.24.0
-matplotlib>=3.8.0
-numpy>=1.26.0
-
-# 语音输入识别（孩子说思路 → 文字）
-SpeechRecognition>=3.10.0
-audio-recorder-streamlit>=0.0.10
-
-# Streamlit Cloud 上 SpeechRecognition 需要 ffmpeg 系统包，
-# 在仓库根目录添加 packages.txt 写入：
-#   ffmpeg
