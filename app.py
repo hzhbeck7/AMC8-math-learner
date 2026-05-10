@@ -469,15 +469,22 @@ HINT_SYSTEM = """你是一位耐心的AMC 8奥数教练，使用"苏格拉底式
 
 请只输出一段提示文本（不要标题、不要markdown、不要"提示N："前缀），结尾加 1 句话的小鼓励。"""
 
-def get_next_hint(api_key: str, question_text: str, hints_given: list) -> str:
-    """Return the next progressive hint."""
+def get_next_hint(api_key: str, question_text: str, hints_given: list, image_parts: list = None) -> str:
+    """Return the next progressive hint. image_parts is an optional list of PIL Images."""
     history = ""
     if hints_given:
         history = "\n\n已经给出的提示历史:\n" + "\n".join(
             f"提示 {i+1}: {h}" for i, h in enumerate(hints_given)
         )
-    user_msg = f"题目：\n{question_text}\n\n现在请给出第 {len(hints_given)+1} 步提示。{history}"
-    response = _model(api_key).generate_content([HINT_SYSTEM, user_msg])
+    user_msg = (
+        f"题目（请仔细阅读，{'见下方图片' if image_parts else '见下文文字'}）：\n"
+        f"{question_text or '(图片中的题目)'}\n\n"
+        f"现在请给出第 {len(hints_given)+1} 步提示。{history}"
+    )
+    parts = [HINT_SYSTEM, user_msg]
+    if image_parts:
+        parts.extend(image_parts)
+    response = _model(api_key).generate_content(parts)
     return response.text.strip()
 
 
@@ -500,9 +507,12 @@ VIZ_PROMPT = """你是一位数学教学可视化专家。我会给你一道AMC 
 只输出代码块，不要其他任何文字。"""
 
 
-def generate_viz_code(api_key: str, question_text: str) -> str | None:
+def generate_viz_code(api_key: str, question_text: str, image_parts: list = None) -> str | None:
     """Ask Gemini to write matplotlib code for the question."""
-    response = _model(api_key).generate_content([VIZ_PROMPT, f"题目:\n{question_text}"])
+    parts = [VIZ_PROMPT, f"题目:\n{question_text or '(图片中的题目)'}"]
+    if image_parts:
+        parts.extend(image_parts)
+    response = _model(api_key).generate_content(parts)
     code_text = response.text.strip()
     m = re.search(r"```python\s*\n(.*?)```", code_text, re.DOTALL)
     if not m:
@@ -560,13 +570,17 @@ COMMENT: 一段 100-150 字的反馈，要：
 - partial = 大方向对但有小错误或漏洞
 - wrong   = 思路有根本性错误"""
 
-def evaluate_student_thinking(api_key: str, question_text: str, student_text: str) -> dict:
+def evaluate_student_thinking(api_key: str, question_text: str, student_text: str, image_parts: list = None) -> dict:
     msg = (
-        f"题目：\n{question_text}\n\n"
+        f"题目（{'见下方图片' if image_parts else '见下文文字'}）：\n"
+        f"{question_text or '(图片中的题目)'}\n\n"
         f"孩子的口述思路：\n{student_text}\n\n"
         f"请评估并按规定格式输出。"
     )
-    response = _model(api_key).generate_content([VOICE_FEEDBACK_PROMPT, msg])
+    parts = [VOICE_FEEDBACK_PROMPT, msg]
+    if image_parts:
+        parts.extend(image_parts)
+    response = _model(api_key).generate_content(parts)
     text = response.text.strip()
     verdict_m = re.search(r"VERDICT:\s*(\w+)", text)
     comment_m = re.search(r"COMMENT:\s*(.+)", text, re.DOTALL)
@@ -770,7 +784,8 @@ def render_result(result_text: str, question_text: str = "", api_key: str = ""):
         with st.expander("📐 看看示意图（点击展开）", expanded=True):
             if "viz_svg" not in st.session_state or st.session_state.get("viz_for") != question_text:
                 with st.spinner("🎨 正在生成几何示意图..."):
-                    code = generate_viz_code(api_key, question_text)
+                    img_parts = st.session_state.get("question_images") or None
+                    code = generate_viz_code(api_key, question_text, image_parts=img_parts)
                     if code:
                         svg_bytes = execute_viz_code(code)
                         if svg_bytes:
@@ -837,7 +852,8 @@ def render_hint_mode(api_key: str, question_text: str):
             if st.button(label, key="hint_btn", use_container_width=True):
                 with st.spinner("🤔 教练在想怎么不剧透..."):
                     try:
-                        nh = get_next_hint(api_key, question_text, hints)
+                        img_parts = st.session_state.get("question_images") or None
+                        nh = get_next_hint(api_key, question_text, hints, image_parts=img_parts)
                         hints.append(nh)
                         st.session_state["hints_given"] = hints
                         st.rerun()
@@ -907,7 +923,8 @@ def render_voice_feedback(api_key: str, question_text: str):
             else:
                 with st.spinner("🤔 教练正在认真听你说..."):
                     try:
-                        verdict = evaluate_student_thinking(api_key, question_text, student_thought)
+                        img_parts = st.session_state.get("question_images") or None
+                        verdict = evaluate_student_thinking(api_key, question_text, student_thought, image_parts=img_parts)
                         st.session_state["eval_verdict"] = verdict
                     except Exception as e:
                         st.error(f"评判失败: {e}")
@@ -1170,9 +1187,12 @@ def render_sidebar() -> str:
 
 
 # ─── Question handling helper ───────────────────────────────────────────────────
-def handle_question(api_key: str, parts: list, question_text: str):
-    """Run full analysis pipeline + record progress."""
+def handle_question(api_key: str, parts: list, question_text: str, image_parts: list = None):
+    """Run full analysis pipeline + record progress.
+    image_parts: list of PIL.Image objects when the question came from an image/PDF.
+    These get re-used by hint mode / viz / voice feedback so AI sees the real question."""
     st.session_state["question_text"] = question_text
+    st.session_state["question_images"] = image_parts or []
     st.session_state["tts_audio"] = None
     st.session_state["viz_svg"] = None
     st.session_state["hints_given"] = []
@@ -1210,8 +1230,8 @@ def maybe_record_progress(parsed_sec: dict):
 def main():
     # init state
     for k in ("qbank_selected", "ai_result", "tts_audio", "hints_given",
-              "viz_svg", "viz_for", "question_text", "solve_seconds",
-              "recorded", "eval_verdict", "student_thought"):
+              "viz_svg", "viz_for", "question_text", "question_images",
+              "solve_seconds", "recorded", "eval_verdict", "student_thought"):
         if k not in st.session_state:
             st.session_state[k] = None
     if not isinstance(st.session_state.get("hints_given"), list):
@@ -1304,7 +1324,8 @@ def main():
                         handle_question(
                             api_key,
                             ["请分析图片中的数学题目，按格式详细解答："] + content_parts,
-                            qtxt_for_record
+                            qtxt_for_record,
+                            image_parts=content_parts,
                         )
 
     with tab_txt:
@@ -1356,14 +1377,17 @@ def main():
             )
             maybe_record_progress(sec)
 
+        # Question is "ready" if we have either text content or stored image parts
+        question_ready = bool(question_text) or bool(st.session_state.get("question_images"))
+
         with sub_tabs[1]:
-            if api_key and question_text:
+            if api_key and question_ready:
                 render_hint_mode(api_key, question_text)
             else:
                 st.info("等加载完题目和 API Key 就能用提示模式啦")
 
         with sub_tabs[2]:
-            if api_key and question_text:
+            if api_key and question_ready:
                 render_voice_feedback(api_key, question_text)
             else:
                 st.info("等加载完题目和 API Key 就能说思路啦")
