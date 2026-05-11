@@ -8,7 +8,7 @@
       "chapter_num": 1,
       "cn_name": "Logic Reasoning",
       "en_name": "Logic Reasoning",
-      "file": "qbank_ch01_Logic Reasoning.json",
+      "file": "qbank_ch01_Logic_Reasoning.json",
       "page_count": 30,
       "source_file": "AMC8 L01 Logic Reasoning.pdf"
     },
@@ -17,7 +17,7 @@
       "chapter_num": 2,
       "cn_name": "Basic Operation",
       "en_name": "Basic Operation",
-      "file": "qbank_ch02_Basic Operation.json",
+      "file": "qbank_ch02_Basic_Operation.json",
       "page_count": 27,
       "source_file": "AMC8 L02 Basic Operation.pdf"
     },
@@ -26,7 +26,7 @@
       "chapter_num": 3,
       "cn_name": "Fraction, Ratio, Percentage.pdf",
       "en_name": "Fraction, Ratio, Percentage.pdf",
-      "file": "qbank_ch03_Fraction, Ratio, Percentage.pdf.json",
+      "file": "qbank_ch03_Fraction__Ratio__Percentage_pdf.json",
       "page_count": 59,
       "source_file": "AMC8 L03 Fraction, Ratio, Percentage.pdf.pdf"
     },
@@ -35,7 +35,7 @@
       "chapter_num": 4,
       "cn_name": "Further Operation",
       "en_name": "Further Operation",
-      "file": "qbank_ch04_Further Operation.json",
+      "file": "qbank_ch04_Further_Operation.json",
       "page_count": 19,
       "source_file": "AMC8 L04 Further Operation.pdf"
     },
@@ -44,7 +44,7 @@
       "chapter_num": 5,
       "cn_name": "Distance and Speed",
       "en_name": "Distance and Speed",
-      "file": "qbank_ch05_Distance and Speed.json",
+      "file": "qbank_ch05_Distance_and_Speed.json",
       "page_count": 27,
       "source_file": "AMC8 L05 Distance and Speed.pdf"
     },
@@ -53,7 +53,7 @@
       "chapter_num": 6,
       "cn_name": "Odd and Even",
       "en_name": "Odd and Even",
-      "file": "qbank_ch06_Odd and Even.json",
+      "file": "qbank_ch06_Odd_and_Even.json",
       "page_count": 20,
       "source_file": "AMC8 L06 Odd and Even.pdf"
     },
@@ -62,7 +62,7 @@
       "chapter_num": 7,
       "cn_name": "Divisibility of Numbers",
       "en_name": "Divisibility of Numbers",
-      "file": "qbank_ch07_Divisibility of Numbers.json",
+      "file": "qbank_ch07_Divisibility_of_Numbers.json",
       "page_count": 24,
       "source_file": "AMC8 L07 Divisibility of Numbers.pdf"
     },
@@ -71,7 +71,7 @@
       "chapter_num": 8,
       "cn_name": "Prime Numbers",
       "en_name": "Prime Numbers",
-      "file": "qbank_ch08_Prime Numbers.json",
+      "file": "qbank_ch08_Prime_Numbers.json",
       "page_count": 17,
       "source_file": "AMC8 L08 Prime Numbers.pdf"
     },
@@ -80,7 +80,7 @@
       "chapter_num": 9,
       "cn_name": "Prime Factorization",
       "en_name": "Prime Factorization",
-      "file": "qbank_ch09_Prime Factorization.json",
+      "file": "qbank_ch09_Prime_Factorization.json",
       "page_count": 36,
       "source_file": "AMC8 L09 Prime Factorization.pdf"
     },
@@ -89,7 +89,7 @@
       "chapter_num": 10,
       "cn_name": "The GCD and LCM",
       "en_name": "The GCD and LCM",
-      "file": "qbank_ch10_The GCD and LCM.json",
+      "file": "qbank_ch10_The_GCD_and_LCM.json",
       "page_count": 20,
       "source_file": "AMC8 L10 The GCD and LCM.pdf"
     },
@@ -120,5 +120,6 @@
       "page_count": 49,
       "source_file": "AMC8 L13 Permutation.pdf"
     }
-  ]
+  ],
+  "total_pages": 386
 }
