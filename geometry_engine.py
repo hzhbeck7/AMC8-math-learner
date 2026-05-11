@@ -64,8 +64,36 @@ PALETTE = {
 
 
 # ─── JSON 校验 & 修复 ─────────────────────────────────────────────────────
+def _primitive_references(prim: dict) -> list[str]:
+    """Return all point/line names this primitive references.
+    Used to drop primitives that reference undefined names → prevents
+    GeoGebra's "argument doesn't match rule: vector vA" error."""
+    refs = []
+    kind = prim.get("kind")
+    # Direct point references
+    for k in ("from", "to", "at", "vertex", "a", "c", "from_a", "from_c",
+              "center", "through", "name"):
+        v = prim.get(k)
+        if isinstance(v, str):
+            refs.append(v)
+    # Array references
+    for k in ("vertices", "to_side"):
+        v = prim.get(k)
+        if isinstance(v, list):
+            refs.extend([x for x in v if isinstance(x, str)])
+    # "circle" and "to_line" reference other primitive IDs, handled separately
+    return refs
+
+
 def validate_geometry_spec(spec: dict) -> dict:
-    """检查并修复 AI 输出的 JSON。返回保证字段齐全的新字典。"""
+    """检查并修复 AI 输出的 JSON。返回保证字段齐全的新字典。
+
+    关键防御：
+    1. 收集所有已定义的点名
+    2. 收集所有 primitive 的 id
+    3. 任何引用未定义点名的 primitive 会被跳过
+    这避免了 GeoGebra 报"参数不符合规则: 向量 vA"等错误。
+    """
     if not isinstance(spec, dict):
         return _empty_spec()
 
@@ -80,13 +108,12 @@ def validate_geometry_spec(spec: dict) -> dict:
     if out["geometry_type"] not in GEOMETRY_TYPES:
         out["geometry_type"] = "generic"
 
-    # Points
+    # ── Pass 1: collect valid point names ──
     seen_names = set()
     for p in spec.get("points", []):
         if not isinstance(p, dict): continue
         name = str(p.get("name", "")).strip()
         if not name or name in seen_names: continue
-        # GeoGebra label rules: must start with letter
         if not name[0].isalpha(): continue
         try:
             x = float(p.get("x", 0))
@@ -96,8 +123,10 @@ def validate_geometry_spec(spec: dict) -> dict:
         seen_names.add(name)
         out["points"].append({"name": name, "x": x, "y": y})
 
-    # Primitives — assign auto IDs if missing
+    # ── Pass 2: scan primitives and track which IDs will exist ──
+    # First pass: build a list of valid primitive IDs
     pid_counter = 0
+    candidate_prims = []
     for prim in spec.get("primitives", []):
         if not isinstance(prim, dict): continue
         kind = prim.get("kind")
@@ -106,22 +135,61 @@ def validate_geometry_spec(spec: dict) -> dict:
         pid_counter += 1
         new_prim = dict(prim)
         new_prim["id"] = _safe_id(pid)
-        out["primitives"].append(new_prim)
+        # "circle" / "to_line" references resolve to another primitive's id
+        # so they need to also be in scope
+        candidate_prims.append(new_prim)
 
-    # Auxiliary steps
+    valid_prim_ids = {p["id"] for p in candidate_prims}
+    valid_names = seen_names | valid_prim_ids  # both points and prim ids
+
+    # Some primitives create new point names too (midpoint with `name` field)
+    for p in candidate_prims:
+        if p.get("kind") == "midpoint" and isinstance(p.get("name"), str):
+            valid_names.add(p["name"])
+
+    # ── Pass 3: keep only primitives whose references all exist ──
+    dropped = []
+    for prim in candidate_prims:
+        refs = _primitive_references(prim)
+        # Special: "to_line" / "circle" reference primitive IDs
+        for k in ("to_line", "circle"):
+            v = prim.get(k)
+            if isinstance(v, str):
+                refs.append(v)
+
+        # Filter: which refs are not in scope?
+        unknown = [r for r in refs if r not in valid_names]
+        if unknown:
+            dropped.append((prim.get("id"), prim.get("kind"), unknown))
+            continue
+        out["primitives"].append(prim)
+
+    if dropped:
+        # Quiet diagnostic — won't fail the render
+        import sys
+        print(f"[geometry_engine] dropped {len(dropped)} prims w/ unknown refs: "
+              f"{dropped[:3]}", file=sys.stderr)
+
+    # ── Pass 4: auxiliary steps (only reference valid prim ids) ──
+    kept_ids = {p["id"] for p in out["primitives"]}
     for s in spec.get("auxiliary_steps", []):
         if not isinstance(s, dict): continue
+        show = [_safe_id(x) for x in s.get("show", []) if isinstance(x, str)]
+        highlight = [_safe_id(x) for x in s.get("highlight", []) if isinstance(x, str)]
+        # Drop step entries that reference vanished primitives
+        show = [x for x in show if x in kept_ids]
+        highlight = [x for x in highlight if x in kept_ids]
         step = {
             "step": int(s.get("step", len(out["auxiliary_steps"]) + 1)),
-            "show": [_safe_id(x) for x in s.get("show", []) if isinstance(x, str)],
-            "highlight": [_safe_id(x) for x in s.get("highlight", []) if isinstance(x, str)],
+            "show": show,
+            "highlight": highlight,
             "narration": str(s.get("narration", ""))[:200],
         }
         out["auxiliary_steps"].append(step)
 
     out["auxiliary_steps"].sort(key=lambda x: x["step"])
 
-    # 如果没有 steps，自动生成一个"显示全部"的步骤
+    # Fallback: ensure at least one step exists with all valid prims visible
     if not out["auxiliary_steps"] and out["primitives"]:
         out["auxiliary_steps"] = [{
             "step": 1,
@@ -440,10 +508,19 @@ def build_geogebra_html(spec: dict, height: int = 480) -> str:
         api.setCoordSystem({xmin}, {xmax}, {ymin}, {ymax});
       }} catch(e){{ console.warn(e); }}
 
+      // SUPPRESS GeoGebra's native error popup — we handle errors silently
+      try {{ api.setErrorDialogsActive(false); }} catch(e){{}}
+
       // Execute every command, then hide everything by default
+      const failedCmds = [];
       for (const c of COMMANDS) {{
         try {{
-          api.evalCommand(c.cmd);
+          const ok = api.evalCommand(c.cmd);
+          if (ok === false) {{
+            // Command rejected by GGB (bad syntax / unknown reference)
+            failedCmds.push(c.id);
+            continue;
+          }}
           const lbl = c.ggb_label || c.id;
           if (c.color) {{
             try {{
