@@ -210,6 +210,49 @@ hr { border-color:var(--border) !important; }
 }
 .footer { text-align:center; padding:2rem 0 1rem; color:#1E2D45; font-size:.72rem; line-height:1.9; }
 
+/* ── Question Bank ── */
+.qbank-chapter-btn {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(245,200,66,0.2) !important;
+    border-radius: 10px !important;
+    color: var(--text) !important;
+    font-size: .85rem !important;
+    text-align: left !important;
+    padding: .65rem 1rem !important;
+    transition: all .2s !important;
+}
+.qbank-chapter-btn:hover {
+    border-color: var(--gold) !important;
+    background: rgba(245,200,66,0.08) !important;
+}
+.qbank-page-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .2s;
+    margin-bottom: .75rem;
+}
+.qbank-page-card:hover {
+    border-color: rgba(245,200,66,0.45);
+    background: rgba(245,200,66,0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(245,200,66,0.12);
+}
+.qbank-page-tag {
+    display: inline-block;
+    font-size: .72rem;
+    padding: .15rem .55rem;
+    border-radius: 10px;
+    margin: .25rem .2rem 0 0;
+    font-weight: 600;
+    letter-spacing: .03em;
+}
+.tag-lecture  { background:rgba(96,165,250,.15);  color:#93C5FD; border:1px solid rgba(96,165,250,.3); }
+.tag-example  { background:rgba(74,222,128,.15);  color:#86EFAC; border:1px solid rgba(74,222,128,.3); }
+.tag-homework { background:rgba(245,200,66,.15);  color:#FDE68A; border:1px solid rgba(245,200,66,.3); }
+
 /* ── Quota bar ── */
 .quota-bar {
     display: flex; align-items: center; gap: 1rem;
@@ -959,6 +1002,244 @@ def render_dialog_panel(api_key: str, question_text: str, user_hash: str):
                 st.rerun()
 
 
+# ─── Question Bank loader ────────────────────────────────────────────────────
+QBANK_BASE_URL = "https://raw.githubusercontent.com/{owner}/{repo}/main/qbank"
+# Fallback to local path when running locally
+QBANK_LOCAL    = "qbank"
+
+
+def _qbank_url_base() -> str:
+    """Detect whether we're on Streamlit Cloud and return the appropriate base."""
+    # When deployed on Streamlit Cloud, load from GitHub raw URLs.
+    # Locally, load from the qbank/ directory.
+    try:
+        owner = st.secrets.get("GITHUB_OWNER", "")
+        repo  = st.secrets.get("GITHUB_REPO", "")
+        if owner and repo:
+            return QBANK_BASE_URL.format(owner=owner, repo=repo)
+    except Exception:
+        pass
+    return None
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def load_qbank_index() -> dict | None:
+    """Load qbank_index.json — cached for 1 hour."""
+    base = _qbank_url_base()
+    try:
+        if base:
+            import urllib.request
+            url = f"{base}/qbank_index.json"
+            with urllib.request.urlopen(url, timeout=10) as r:
+                return json.loads(r.read().decode())
+        else:
+            local = os.path.join(QBANK_LOCAL, "qbank_index.json")
+            if os.path.exists(local):
+                with open(local, encoding="utf-8") as f:
+                    return json.load(f)
+    except Exception as e:
+        st.warning(f"题库索引加载失败: {e}")
+    return None
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def load_qbank_chapter(filename: str) -> dict | None:
+    """Load a single chapter JSON — cached for 1 hour."""
+    base = _qbank_url_base()
+    try:
+        if base:
+            import urllib.request
+            url = f"{base}/{filename}"
+            with urllib.request.urlopen(url, timeout=30) as r:
+                return json.loads(r.read().decode())
+        else:
+            local = os.path.join(QBANK_LOCAL, filename)
+            if os.path.exists(local):
+                with open(local, encoding="utf-8") as f:
+                    return json.load(f)
+    except Exception as e:
+        st.warning(f"章节数据加载失败 ({filename}): {e}")
+    return None
+
+
+def b64_to_pil(b64_str: str) -> Image.Image:
+    """Decode a base64 JPEG string to a PIL Image."""
+    import base64
+    data = base64.b64decode(b64_str)
+    return Image.open(io.BytesIO(data))
+
+
+# ─── Question Bank UI ─────────────────────────────────────────────────────────
+def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
+    """Full question bank browser and launch interface."""
+
+    # ── State ──
+    if "qb_chapter" not in st.session_state:
+        st.session_state["qb_chapter"] = None   # selected chapter filename
+    if "qb_page_idx" not in st.session_state:
+        st.session_state["qb_page_idx"] = None  # selected page index within chapter
+
+    index = load_qbank_index()
+    if not index:
+        st.info("📚 题库暂未配置。请在 Streamlit Secrets 中添加 GITHUB_OWNER 和 GITHUB_REPO，或在本地 qbank/ 目录放置题库文件。")
+        return
+
+    chapters = index.get("chapters", [])
+
+    # ── Chapter picker (shown when no chapter selected) ──
+    if not st.session_state["qb_chapter"]:
+        st.markdown(
+            '<p style="color:#F5C842;font-family:\'ZCOOL XiaoWei\',serif;'
+            'font-size:1.25rem;margin:.5rem 0 1rem;">📚 选择章节</p>',
+            unsafe_allow_html=True,
+        )
+        st.caption(f"共 {len(chapters)} 章 · {index.get('total_pages', '?')} 页题目与讲解")
+
+        # Responsive grid: 2 columns
+        rows = [chapters[i:i+2] for i in range(0, len(chapters), 2)]
+        for row in rows:
+            cols = st.columns(len(row))
+            for col, ch in zip(cols, row):
+                with col:
+                    label = (
+                        f"**{ch['cn_name']}**  \n\n"
+                        f"{ch['en_name']}  ·  {ch['page_count']} 页"
+                    )
+                    if st.button(label, key=f"qb_ch_{ch['id']}", use_container_width=True):
+                        st.session_state["qb_chapter"] = ch["file"]
+                        st.session_state["qb_page_idx"] = None
+                        st.rerun()
+        return
+
+    # ── Page browser (chapter selected, no page selected) ──
+    ch_file = st.session_state["qb_chapter"]
+    ch_meta = next((c for c in chapters if c["file"] == ch_file), None)
+
+    # Back button
+    col_back, col_title = st.columns([1, 8])
+    with col_back:
+        if st.button("← 返回", key="qb_back_ch"):
+            st.session_state["qb_chapter"] = None
+            st.session_state["qb_page_idx"] = None
+            st.rerun()
+    with col_title:
+        if ch_meta:
+            st.markdown(
+                f'<p style="color:#F5C842;font-family:\'ZCOOL XiaoWei\',serif;'
+                f'font-size:1.2rem;margin:.4rem 0;">'
+                f'📖 {ch_meta["cn_name"]}</p>',
+                unsafe_allow_html=True,
+            )
+
+    if st.session_state["qb_page_idx"] is not None:
+        # ── Single page view ──────────────────────────────────────────────
+        with st.spinner("📄 加载页面..."):
+            chapter_data = load_qbank_chapter(ch_file)
+
+        if not chapter_data:
+            st.error("加载失败，请重试")
+            st.session_state["qb_page_idx"] = None
+            return
+
+        pages = chapter_data.get("pages", [])
+        idx = st.session_state["qb_page_idx"]
+        page = pages[idx]
+
+        # Navigation row
+        nav1, nav2, nav3, nav_info = st.columns([1, 1, 1, 4])
+        with nav1:
+            if st.button("← 上页", key="qb_prev", disabled=(idx == 0)):
+                st.session_state["qb_page_idx"] = idx - 1
+                st.rerun()
+        with nav2:
+            if st.button("下页 →", key="qb_next", disabled=(idx >= len(pages) - 1)):
+                st.session_state["qb_page_idx"] = idx + 1
+                st.rerun()
+        with nav3:
+            if st.button("📋 列表", key="qb_list"):
+                st.session_state["qb_page_idx"] = None
+                st.rerun()
+        with nav_info:
+            ptype_label = {"lecture": "知识讲解", "example": "例题", "homework": "作业练习"}.get(
+                page.get("page_type", ""), "")
+            st.markdown(
+                f'<p style="color:#8899BB;font-size:.82rem;margin:.5rem 0;">'
+                f'第 {idx+1} / {len(pages)} 页 · 书页 {page.get("book_page","?")} · {ptype_label}</p>',
+                unsafe_allow_html=True,
+            )
+
+        # Show page image
+        img = b64_to_pil(page["img_b64"])
+        st.image(img, use_container_width=True)
+
+        # Solve button
+        if not can_use_ai:
+            st.warning("⚠️ 请先在左侧输入 Gemini API Key 或等待免费额度恢复。")
+        else:
+            c1, c2, c3 = st.columns([1, 2, 1])
+            with c2:
+                if st.button("🚀 AI 教练讲解这道题", use_container_width=True, key="qb_solve"):
+                    handle_question(
+                        api_key,
+                        ["请分析图片中的AMC 8题目，按格式详细解答：", img],
+                        f"题库：{ch_meta['cn_name'] if ch_meta else ''} 第{page.get('book_page','?')}页",
+                        user_hash,
+                        image_parts=[img],
+                    )
+                    # Scroll user to result — st.rerun not needed, handle_question sets session state
+    else:
+        # ── Page thumbnail grid ──────────────────────────────────────────
+        with st.spinner("📚 加载章节..."):
+            chapter_data = load_qbank_chapter(ch_file)
+
+        if not chapter_data:
+            st.error("加载失败，请重试")
+            return
+
+        pages = chapter_data.get("pages", [])
+        st.caption(f"共 {len(pages)} 页 · 点击任意页面预览并解题")
+
+        # Filter bar
+        filter_col1, filter_col2 = st.columns([2, 1])
+        with filter_col1:
+            type_filter = st.radio(
+                "筛选",
+                ["全部", "知识讲解", "例题", "作业练习"],
+                horizontal=True,
+                key="qb_type_filter",
+                label_visibility="collapsed",
+            )
+        type_map = {"全部": None, "知识讲解": "lecture", "例题": "example", "作业练习": "homework"}
+        selected_type = type_map[type_filter]
+        filtered = [p for p in pages if selected_type is None or p.get("page_type") == selected_type]
+
+        st.caption(f"筛选结果：{len(filtered)} 页")
+
+        # Thumbnail grid: 3 per row
+        for row_start in range(0, len(filtered), 3):
+            row_pages = filtered[row_start:row_start + 3]
+            cols = st.columns(3)
+            for col, page in zip(cols, row_pages):
+                with col:
+                    # Decode thumbnail image
+                    img = b64_to_pil(page["img_b64"])
+                    # Show small thumbnail
+                    st.image(img, use_container_width=True)
+                    # Tag + button row
+                    ptype = page.get("page_type", "")
+                    tag_class = {"lecture": "tag-lecture", "example": "tag-example", "homework": "tag-homework"}.get(ptype, "tag-lecture")
+                    tag_label = {"lecture": "讲解", "example": "例题", "homework": "作业"}.get(ptype, "")
+                    st.markdown(
+                        f'<span class="qbank-page-tag {tag_class}">{tag_label}</span>'
+                        f'<span style="color:#8899BB;font-size:.72rem;">书页 {page.get("book_page","?")}</span>',
+                        unsafe_allow_html=True,
+                    )
+                    real_idx = pages.index(page)
+                    if st.button("📖 选这页", key=f"qb_p_{page['id']}", use_container_width=True):
+                        st.session_state["qb_page_idx"] = real_idx
+                        st.rerun()
+
+
 # ─── User identity & cookies ────────────────────────────────────────────────
 def _get_or_set_cookie_uuid(controller) -> str | None:
     """Get a stable per-browser UUID; create one if missing.
@@ -1277,11 +1558,12 @@ def render_sidebar() -> tuple[str, bool]:
         st.markdown("""
 <div style="color:#94A3B8;font-size:.85rem;line-height:2;">
 <p style="color:#F5C842;font-family:'ZCOOL XiaoWei',serif;font-size:1rem;margin:.3rem 0;">📚 使用流程</p>
-<p>① 上传题目或粘贴文字</p>
-<p>② AI 讲题三段式</p>
-<p>③ 不会用「提示模式」逐步引导</p>
+<p>① 选「自由解题」上传 / 粘贴</p>
+<p>&nbsp;&nbsp;&nbsp;或选「内置题库」按章节练习</p>
+<p>② AI 三段式讲解</p>
+<p>③ 不会用「提示模式」</p>
 <p>④ 几何题看「交互式图」</p>
-<p>⑤ 听完后试试「我讲思路」</p>
+<p>⑤ 听完试试「我讲思路」</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1337,7 +1619,8 @@ def handle_question(api_key: str, parts: list, question_text: str,
 def main():
     for k in ("ai_result", "tts_audio", "hints_given",
               "geo_spec", "geo_for", "question_text", "question_images",
-              "eval_verdict", "student_thought"):
+              "eval_verdict", "student_thought",
+              "qb_chapter", "qb_page_idx"):
         if k not in st.session_state:
             st.session_state[k] = None
     if not isinstance(st.session_state["hints_given"], list):
@@ -1367,75 +1650,92 @@ def main():
   <span class="hero-badge">✨ 让数学思维看得见、摸得着</span>
 </div>""", unsafe_allow_html=True)
 
-    # ── Quota status bar (only matters when using platform key)
+    # ── Quota status bar
     user_provided_key = bool(api_key and api_key.strip())
     render_quota_bar(user_hash, user_provided_key)
-
-    # ── Determine if any AI calls are possible
     can_use_ai = user_provided_key or bool(_get_platform_key())
 
-    # ── Input tabs
-    tab_img, tab_txt = st.tabs(["📤 上传图片 / PDF", "✏️ 手动输入题目"])
+    # ── Top-level navigation: 解题 / 题库
+    mode = st.radio(
+        "主导航",
+        ["✏️ 自由解题", "📚 内置题库"],
+        horizontal=True,
+        label_visibility="collapsed",
+        key="main_nav",
+    )
+    st.markdown('<hr style="margin:.6rem 0 1.2rem;">', unsafe_allow_html=True)
 
-    with tab_img:
-        st.caption("支持 AMC 8 题目截图、扫描件或 PDF（识别前 5 页）")
-        uploaded = st.file_uploader("拖拽或点击上传", type=["jpg", "jpeg", "png", "pdf"],
-                                    label_visibility="collapsed", key="upl")
-        if uploaded:
-            content_parts, preview = [], []
-            if uploaded.type == "application/pdf":
-                with st.spinner("📄 解析 PDF..."):
-                    imgs = pdf_to_pil(uploaded.read(), max_pages=5)
-                preview = imgs[:3]; content_parts = imgs
-                st.info(f"PDF {len(imgs)} 页已加载")
-            else:
-                img = Image.open(uploaded)
-                preview = [img]; content_parts = [img]
+    # ════════════════════════════════════════════
+    # 模式 1：自由解题（上传 / 手动输入）
+    # ════════════════════════════════════════════
+    if mode == "✏️ 自由解题":
+        tab_img, tab_txt = st.tabs(["📤 上传图片 / PDF", "✏️ 手动输入题目"])
 
-            cols = st.columns(min(len(preview), 3))
-            for i, im in enumerate(preview[:3]):
-                with cols[i]:
-                    st.image(im, caption=f"第 {i+1} 页" if len(preview) > 1 else "上传图片",
-                             use_container_width=True)
+        with tab_img:
+            st.caption("支持 AMC 8 题目截图、扫描件或 PDF（识别前 5 页）")
+            uploaded = st.file_uploader("拖拽或点击上传", type=["jpg", "jpeg", "png", "pdf"],
+                                        label_visibility="collapsed", key="upl")
+            if uploaded:
+                content_parts, preview = [], []
+                if uploaded.type == "application/pdf":
+                    with st.spinner("📄 解析 PDF..."):
+                        imgs = pdf_to_pil(uploaded.read(), max_pages=5)
+                    preview = imgs[:3]; content_parts = imgs
+                    st.info(f"PDF {len(imgs)} 页已加载")
+                else:
+                    img = Image.open(uploaded)
+                    preview = [img]; content_parts = [img]
 
+                cols = st.columns(min(len(preview), 3))
+                for i, im in enumerate(preview[:3]):
+                    with cols[i]:
+                        st.image(im, caption=f"第 {i+1} 页" if len(preview) > 1 else "上传图片",
+                                 use_container_width=True)
+
+                if not can_use_ai:
+                    st.warning("⚠️ 当前没有可用的 API Key。请在左侧填入您自己的 Gemini API Key。")
+                else:
+                    c1, c2, c3 = st.columns([1, 2, 1])
+                    with c2:
+                        if st.button("🚀 开始智能解题", use_container_width=True, key="go_img"):
+                            handle_question(
+                                api_key,
+                                ["请分析图片中的数学题目，按格式详细解答："] + content_parts,
+                                "[图片题目]",
+                                user_hash,
+                                image_parts=content_parts,
+                            )
+
+        with tab_txt:
+            st.caption("直接粘贴或输入题目文字")
+            q_text = st.text_area(
+                "题目内容",
+                placeholder="例：在三角形 ABC 中，AB = AC = 5，BC = 6。求三角形 ABC 的面积。",
+                height=180, label_visibility="collapsed", key="qtxt"
+            )
             if not can_use_ai:
                 st.warning("⚠️ 当前没有可用的 API Key。请在左侧填入您自己的 Gemini API Key。")
             else:
                 c1, c2, c3 = st.columns([1, 2, 1])
                 with c2:
-                    if st.button("🚀 开始智能解题", use_container_width=True, key="go_img"):
-                        handle_question(
-                            api_key,
-                            ["请分析图片中的数学题目，按格式详细解答："] + content_parts,
-                            "[图片题目]",
-                            user_hash,
-                            image_parts=content_parts,
-                        )
+                    if st.button("🚀 开始智能解题", use_container_width=True, key="go_txt"):
+                        if not q_text.strip():
+                            st.warning("请输入题目内容")
+                        else:
+                            handle_question(
+                                api_key,
+                                [f"请分析以下AMC 8题目：\n\n{q_text}"],
+                                q_text,
+                                user_hash,
+                            )
 
-    with tab_txt:
-        st.caption("直接粘贴或输入题目文字")
-        q_text = st.text_area(
-            "题目内容",
-            placeholder="例：在三角形 ABC 中，AB = AC = 5，BC = 6。求三角形 ABC 的面积。",
-            height=180, label_visibility="collapsed", key="qtxt"
-        )
-        if not can_use_ai:
-            st.warning("⚠️ 当前没有可用的 API Key。请在左侧填入您自己的 Gemini API Key。")
-        else:
-            c1, c2, c3 = st.columns([1, 2, 1])
-            with c2:
-                if st.button("🚀 开始智能解题", use_container_width=True, key="go_txt"):
-                    if not q_text.strip():
-                        st.warning("请输入题目内容")
-                    else:
-                        handle_question(
-                            api_key,
-                            [f"请分析以下AMC 8题目：\n\n{q_text}"],
-                            q_text,
-                            user_hash,
-                        )
+    # ════════════════════════════════════════════
+    # 模式 2：内置题库
+    # ════════════════════════════════════════════
+    else:
+        render_qbank(api_key, user_hash, can_use_ai)
 
-    # ── Output: 4 tabs (完整解析 / 提示 / 几何 / 思路)
+    # ── Output panel (appears in both modes after solve) ──
     if st.session_state.get("ai_result"):
         st.divider()
         question_text = st.session_state.get("question_text") or ""
