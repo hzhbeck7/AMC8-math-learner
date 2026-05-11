@@ -1,0 +1,211 @@
+{
+  "source": "AMC8知识点精讲1_S.pdf",
+  "total_chapters": 17,
+  "total_pages": 377,
+  "chapters": [
+    {
+      "id": "ch01_triangles",
+      "chapter_num": 1,
+      "cn_name": "第一章 角和三角形",
+      "en_name": "Angles & Triangles",
+      "file": "qbank_ch01_triangles.json",
+      "page_count": 22,
+      "pdf_pages": [
+        8,
+        29
+      ]
+    },
+    {
+      "id": "ch02_pythagorean",
+      "chapter_num": 2,
+      "cn_name": "第二章 勾股定理",
+      "en_name": "Pythagorean Theorem",
+      "file": "qbank_ch02_pythagorean.json",
+      "page_count": 28,
+      "pdf_pages": [
+        30,
+        57
+      ]
+    },
+    {
+      "id": "ch03_similar",
+      "chapter_num": 3,
+      "cn_name": "第三章 相似三角形",
+      "en_name": "Similar Triangles",
+      "file": "qbank_ch03_similar.json",
+      "page_count": 22,
+      "pdf_pages": [
+        58,
+        79
+      ]
+    },
+    {
+      "id": "ch04_circles",
+      "chapter_num": 4,
+      "cn_name": "第四章 圆",
+      "en_name": "Circles",
+      "file": "qbank_ch04_circles.json",
+      "page_count": 28,
+      "pdf_pages": [
+        80,
+        107
+      ]
+    },
+    {
+      "id": "ch05_area_volume",
+      "chapter_num": 5,
+      "cn_name": "第五章 周长、面积、立体图形的体积",
+      "en_name": "Area, Perimeter & Volume",
+      "file": "qbank_ch05_area_volume.json",
+      "page_count": 29,
+      "pdf_pages": [
+        108,
+        136
+      ]
+    },
+    {
+      "id": "ch06_linear",
+      "chapter_num": 6,
+      "cn_name": "第六章 直线",
+      "en_name": "Linear Lines",
+      "file": "qbank_ch06_linear.json",
+      "page_count": 26,
+      "pdf_pages": [
+        137,
+        162
+      ]
+    },
+    {
+      "id": "ch07_equations",
+      "chapter_num": 7,
+      "cn_name": "第七章 解方程",
+      "en_name": "Solving Equations",
+      "file": "qbank_ch07_equations.json",
+      "page_count": 36,
+      "pdf_pages": [
+        163,
+        198
+      ]
+    },
+    {
+      "id": "ch08_powers",
+      "chapter_num": 8,
+      "cn_name": "第八章 幂和根式",
+      "en_name": "Powers & Radicals",
+      "file": "qbank_ch08_powers.json",
+      "page_count": 19,
+      "pdf_pages": [
+        199,
+        217
+      ]
+    },
+    {
+      "id": "ch09_logic",
+      "chapter_num": 9,
+      "cn_name": "第九章 逻辑推理和数据分析",
+      "en_name": "Logic & Data Analysis",
+      "file": "qbank_ch09_logic.json",
+      "page_count": 27,
+      "pdf_pages": [
+        218,
+        244
+      ]
+    },
+    {
+      "id": "ch10_sequences",
+      "chapter_num": 10,
+      "cn_name": "第十章 数列和级数",
+      "en_name": "Sequences & Series",
+      "file": "qbank_ch10_sequences.json",
+      "page_count": 11,
+      "pdf_pages": [
+        245,
+        255
+      ]
+    },
+    {
+      "id": "ch11_inequalities",
+      "chapter_num": 11,
+      "cn_name": "第十一章 解不等式",
+      "en_name": "Solving Inequalities",
+      "file": "qbank_ch11_inequalities.json",
+      "page_count": 8,
+      "pdf_pages": [
+        256,
+        263
+      ]
+    },
+    {
+      "id": "ch12_permutations",
+      "chapter_num": 12,
+      "cn_name": "第十二章 排列和组合",
+      "en_name": "Permutations & Combinations",
+      "file": "qbank_ch12_permutations.json",
+      "page_count": 37,
+      "pdf_pages": [
+        264,
+        300
+      ]
+    },
+    {
+      "id": "ch13_adv_combinatorics",
+      "chapter_num": 13,
+      "cn_name": "第十三章 组合中的高级模型",
+      "en_name": "Advanced Combinatorics",
+      "file": "qbank_ch13_adv_combinatorics.json",
+      "page_count": 17,
+      "pdf_pages": [
+        301,
+        317
+      ]
+    },
+    {
+      "id": "ch14_probability",
+      "chapter_num": 14,
+      "cn_name": "第十四章 概率",
+      "en_name": "Probability",
+      "file": "qbank_ch14_probability.json",
+      "page_count": 26,
+      "pdf_pages": [
+        318,
+        343
+      ]
+    },
+    {
+      "id": "ch15_primes",
+      "chapter_num": 15,
+      "cn_name": "第十五章 质数",
+      "en_name": "Prime Numbers",
+      "file": "qbank_ch15_primes.json",
+      "page_count": 19,
+      "pdf_pages": [
+        344,
+        362
+      ]
+    },
+    {
+      "id": "ch16_diophantine",
+      "chapter_num": 16,
+      "cn_name": "第十六章 不定方程",
+      "en_name": "Diophantine Equations",
+      "file": "qbank_ch16_diophantine.json",
+      "page_count": 14,
+      "pdf_pages": [
+        363,
+        376
+      ]
+    },
+    {
+      "id": "ch17_remainders",
+      "chapter_num": 17,
+      "cn_name": "第十七章 余数和整除",
+      "en_name": "Remainders & Divisibility",
+      "file": "qbank_ch17_remainders.json",
+      "page_count": 8,
+      "pdf_pages": [
+        377,
+        384
+      ]
+    }
+  ]
+}
