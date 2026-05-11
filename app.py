@@ -175,6 +175,22 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stAppViewContainer
     box-shadow:0 7px 22px rgba(245,200,66,.42) !important;
 }
 
+/* Secondary (inactive nav) button */
+.stButton > button[kind="secondary"] {
+    background: rgba(255,255,255,0.07) !important;
+    color: #BCC8E0 !important;
+    font-weight: 500 !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    box-shadow: none !important;
+}
+.stButton > button[kind="secondary"]:hover {
+    background: rgba(245,200,66,0.12) !important;
+    color: var(--gold) !important;
+    border-color: rgba(245,200,66,0.4) !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
 .stTextInput > div > div > input,
 .stTextArea  > div > div > textarea {
     background: #1C2E4A !important;
@@ -202,6 +218,48 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stAppViewContainer
     background:rgba(245,200,66,.18) !important; color:var(--gold) !important;
 }
 hr { border-color:var(--border) !important; }
+
+/* ── Radio buttons — ensure text is always visible on dark background ── */
+[data-testid="stRadio"] label {
+    color: var(--text) !important;
+    font-family: 'Noto Sans SC', sans-serif !important;
+    font-size: .92rem !important;
+    padding: .35rem .75rem !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    background: rgba(255,255,255,0.05) !important;
+    transition: all .2s !important;
+    cursor: pointer !important;
+}
+[data-testid="stRadio"] label:hover {
+    border-color: rgba(245,200,66,0.5) !important;
+    background: rgba(245,200,66,0.1) !important;
+    color: #FFFFFF !important;
+}
+[data-testid="stRadio"] label[data-baseweb="radio"] > div:first-child,
+[data-testid="stRadio"] [aria-checked="true"] ~ div {
+    color: var(--gold) !important;
+}
+/* Selected state */
+[data-testid="stRadio"] [data-checked="true"] label,
+[data-testid="stRadio"] label:has(input:checked) {
+    border-color: var(--gold) !important;
+    background: rgba(245,200,66,0.15) !important;
+    color: var(--gold) !important;
+    font-weight: 600 !important;
+}
+/* The radio dot itself */
+[data-testid="stRadio"] [role="radio"][aria-checked="true"] {
+    background-color: var(--gold) !important;
+    border-color: var(--gold) !important;
+}
+/* Text span next to radio dot */
+[data-testid="stRadio"] p,
+[data-testid="stRadio"] span,
+[data-testid="stRadio"] div[data-testid="stMarkdownContainer"] p {
+    color: var(--text) !important;
+    -webkit-text-fill-color: var(--text) !important;
+}
 
 @media (max-width:768px) {
     .sc-md-wrap { padding:1rem 1.1rem; }
@@ -1656,19 +1714,39 @@ def main():
     can_use_ai = user_provided_key or bool(_get_platform_key())
 
     # ── Top-level navigation: 解题 / 题库
-    mode = st.radio(
-        "主导航",
-        ["✏️ 自由解题", "📚 内置题库"],
-        horizontal=True,
-        label_visibility="collapsed",
-        key="main_nav",
-    )
+    # Use session_state to track mode (button-based, fully stylable)
+    if "main_nav" not in st.session_state:
+        st.session_state["main_nav"] = "free"
+
+    nav_c1, nav_c2, nav_c3 = st.columns([2, 2, 6])
+    with nav_c1:
+        free_active = st.session_state["main_nav"] == "free"
+        if st.button(
+            "✏️ 自由解题",
+            key="nav_free",
+            use_container_width=True,
+            type="primary" if free_active else "secondary",
+        ):
+            st.session_state["main_nav"] = "free"
+            st.rerun()
+    with nav_c2:
+        qb_active = st.session_state["main_nav"] == "qbank"
+        if st.button(
+            "📚 内置题库",
+            key="nav_qbank",
+            use_container_width=True,
+            type="primary" if qb_active else "secondary",
+        ):
+            st.session_state["main_nav"] = "qbank"
+            st.rerun()
+
     st.markdown('<hr style="margin:.6rem 0 1.2rem;">', unsafe_allow_html=True)
+    mode = st.session_state["main_nav"]
 
     # ════════════════════════════════════════════
     # 模式 1：自由解题（上传 / 手动输入）
     # ════════════════════════════════════════════
-    if mode == "✏️ 自由解题":
+    if mode == "free":
         tab_img, tab_txt = st.tabs(["📤 上传图片 / PDF", "✏️ 手动输入题目"])
 
         with tab_img:
@@ -1732,7 +1810,7 @@ def main():
     # ════════════════════════════════════════════
     # 模式 2：内置题库
     # ════════════════════════════════════════════
-    else:
+    elif mode == "qbank":
         render_qbank(api_key, user_hash, can_use_ai)
 
     # ── Output panel (appears in both modes after solve) ──
