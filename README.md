@@ -14,18 +14,8 @@ AI 驱动的 AMC 8 数学竞赛辅导工具 (MVP)。
 
 新用户每日免费 50,000 tokens（约 5-8 道题完整体验），用完后可填入自己的 Gemini API Key 继续无限使用。
 
-## 部署 (Streamlit Cloud)
 
-### 1. Streamlit Secrets 配置
-
-在 `Settings → Secrets` 中添加：
-
-```toml
-GEMINI_API_KEY = "您的平台 Gemini API Key（提供给免费用户使用）"
-ADMIN_PASSWORD = "您的管理员密码"
-```
-
-### 2. 文件结构
+### 1. 文件结构
 
 ```
 .
@@ -36,7 +26,7 @@ ADMIN_PASSWORD = "您的管理员密码"
 └── usage.json              # 自动生成的使用记录（可丢失）
 ```
 
-### 3. 管理后台
+### 2. 管理后台
 
 侧边栏 → 🔐 管理员 → 输入密码即可进入：
 
