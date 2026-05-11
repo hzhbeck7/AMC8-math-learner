@@ -1151,21 +1151,41 @@ def load_qbank_index() -> dict | None:
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_qbank_chapter(filename: str) -> dict | None:
-    """Load a single chapter JSON — cached for 1 hour."""
+    """Load a single chapter JSON — cached for 1 hour.
+    Handles filename mismatches: tries original name, then with
+    spaces↔underscores, then URL-encoded, to be robust against
+    different OS/upload behaviors."""
+    import urllib.parse
+
+    # Build a list of candidate filenames to try
+    candidates = [filename]
+    # spaces → underscores
+    if " " in filename:
+        candidates.append(filename.replace(" ", "_").replace(",", ""))
+    # underscores → spaces
+    if "_" in filename:
+        candidates.append(filename.replace("_", " "))
+
     base = _qbank_url_base()
-    try:
-        if base:
-            import urllib.request
-            url = f"{base}/{filename}"
-            with urllib.request.urlopen(url, timeout=30) as r:
-                return json.loads(r.read().decode())
-        else:
-            local = os.path.join(QBANK_LOCAL, filename)
-            if os.path.exists(local):
-                with open(local, encoding="utf-8") as f:
-                    return json.load(f)
-    except Exception as e:
-        st.warning(f"章节数据加载失败 ({filename}): {e}")
+
+    for fn in candidates:
+        try:
+            if base:
+                import urllib.request
+                # URL-encode the filename (handles spaces, commas, etc.)
+                encoded = urllib.parse.quote(fn, safe="")
+                url = f"{base}/{encoded}"
+                with urllib.request.urlopen(url, timeout=30) as r:
+                    return json.loads(r.read().decode())
+            else:
+                local = os.path.join(QBANK_LOCAL, fn)
+                if os.path.exists(local):
+                    with open(local, encoding="utf-8") as f:
+                        return json.load(f)
+        except Exception:
+            continue  # try next candidate
+
+    st.warning(f"章节数据加载失败: 尝试了 {candidates} 均未找到")
     return None
 
 
@@ -1204,7 +1224,8 @@ def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
             'font-size:1.25rem;margin:.5rem 0 1rem;">📚 选择章节</p>',
             unsafe_allow_html=True,
         )
-        st.caption(f"共 {len(chapters)} 章 · {index.get('total_pages', '?')} 页题目与讲解")
+        total = index.get('total_pages', index.get('total_questions', '?'))
+        st.caption(f"共 {len(chapters)} 章 · {total} 页题目与讲解")
 
         rows = [chapters[i:i+2] for i in range(0, len(chapters), 2)]
         for row in rows:
@@ -1212,8 +1233,8 @@ def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
             for col, ch in zip(cols, row):
                 with col:
                     label = (
-                        f"**{ch['cn_name']}**  \n\n"
-                        f"{ch['en_name']}  ·  {ch['page_count']} 页"
+                        f"**{ch.get('cn_name', ch.get('id', '?'))}**  \n\n"
+                        f"{ch.get('en_name', '')}  ·  {ch.get('page_count', '?')} 页"
                     )
                     if st.button(label, key=f"qb_ch_{ch['id']}", use_container_width=True):
                         # No st.rerun() — Streamlit reruns automatically on click
@@ -1237,7 +1258,7 @@ def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
             st.markdown(
                 f'<p style="color:#F5C842;font-family:\'ZCOOL XiaoWei\',serif;'
                 f'font-size:1.2rem;margin:.4rem 0;">'
-                f'📖 {ch_meta["cn_name"]}</p>',
+                f'📖 {ch_meta.get("cn_name", "章节")}</p>',
                 unsafe_allow_html=True,
             )
 
@@ -1276,12 +1297,15 @@ def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
             if st.button("📋 列表", key="qb_list"):
                 st.session_state["qb_page_idx"] = None
         with nav_info:
-            ptype_label = {"lecture": "知识讲解", "example": "例题", "homework": "作业练习"}.get(
-                page.get("page_type", ""), "")
+            ptype = page.get("page_type", "")
+            ptype_label = {"lecture": "知识讲解", "example": "例题", "homework": "作业练习"}.get(ptype, "")
+            page_num = page.get("book_page", page.get("pdf_page", "?"))
+            info_parts = [f"第 {idx+1} / {len(pages)} 页", f"页码 {page_num}"]
+            if ptype_label:
+                info_parts.append(ptype_label)
             st.markdown(
                 f'<p style="color:#8899BB;font-size:.82rem;margin:.5rem 0;">'
-                f'第 {idx+1} / {len(pages)} 页 · '
-                f'书页 {page.get("book_page","?")} · {ptype_label}</p>',
+                f'{" · ".join(info_parts)}</p>',
                 unsafe_allow_html=True,
             )
 
@@ -1300,8 +1324,8 @@ def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
                         handle_question(
                             api_key,
                             ["请分析图片中的AMC 8题目，按格式详细解答：", img],
-                            f"题库：{ch_meta['cn_name'] if ch_meta else ''} "
-                            f"第{page.get('book_page','?')}页",
+                            f"题库：{ch_meta.get('cn_name','') if ch_meta else ''} "
+                            f"第{page.get('book_page', page.get('pdf_page','?'))}页",
                             user_hash,
                             image_parts=[img],
                         )
@@ -1312,17 +1336,22 @@ def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
     # ══════════════════════════════════════════════════════════════════
     st.caption(f"共 {len(pages)} 页 · 点击「选这页」进入全页预览，再点「AI 教练讲解」开始解题")
 
-    type_filter = st.radio(
-        "筛选类型",
-        ["全部", "知识讲解", "例题", "作业练习"],
-        horizontal=True,
-        key="qb_type_filter",
-        label_visibility="collapsed",
-    )
-    type_map = {"全部": None, "知识讲解": "lecture", "例题": "example", "作业练习": "homework"}
-    selected_type = type_map[type_filter]
-    filtered = [p for p in pages if selected_type is None or p.get("page_type") == selected_type]
-    st.caption(f"筛选结果：{len(filtered)} 页")
+    # Only show filter if pages have page_type data
+    has_types = any(p.get("page_type") for p in pages[:5])
+    if has_types:
+        type_filter = st.radio(
+            "筛选类型",
+            ["全部", "知识讲解", "例题", "作业练习"],
+            horizontal=True,
+            key="qb_type_filter",
+            label_visibility="collapsed",
+        )
+        type_map = {"全部": None, "知识讲解": "lecture", "例题": "example", "作业练习": "homework"}
+        selected_type = type_map[type_filter]
+        filtered = [p for p in pages if selected_type is None or p.get("page_type") == selected_type]
+        st.caption(f"筛选结果：{len(filtered)} 页")
+    else:
+        filtered = pages
 
     # Thumbnail grid — 3 per row, no st.rerun()
     for row_start in range(0, len(filtered), 3):
@@ -1333,17 +1362,23 @@ def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
                 img = b64_to_pil(page["img_b64"])
                 st.image(img, use_container_width=True)
                 ptype = page.get("page_type", "")
-                tag_class = {"lecture": "tag-lecture",
-                             "example": "tag-example",
-                             "homework": "tag-homework"}.get(ptype, "tag-lecture")
-                tag_label = {"lecture": "讲解", "example": "例题",
-                             "homework": "作业"}.get(ptype, "")
-                st.markdown(
-                    f'<span class="qbank-page-tag {tag_class}">{tag_label}</span>'
-                    f'<span style="color:#8899BB;font-size:.72rem;">'
-                    f'书页 {page.get("book_page","?")}</span>',
-                    unsafe_allow_html=True,
-                )
+                page_num = page.get("book_page", page.get("pdf_page", "?"))
+                if ptype:
+                    tag_class = {"lecture": "tag-lecture",
+                                 "example": "tag-example",
+                                 "homework": "tag-homework"}.get(ptype, "tag-lecture")
+                    tag_label = {"lecture": "讲解", "example": "例题",
+                                 "homework": "作业"}.get(ptype, "")
+                    st.markdown(
+                        f'<span class="qbank-page-tag {tag_class}">{tag_label}</span>'
+                        f'<span style="color:#8899BB;font-size:.72rem;">页码 {page_num}</span>',
+                        unsafe_allow_html=True,
+                    )
+                else:
+                    st.markdown(
+                        f'<span style="color:#8899BB;font-size:.78rem;">页码 {page_num}</span>',
+                        unsafe_allow_html=True,
+                    )
                 real_idx = pages.index(page)
                 # ← KEY FIX: no st.rerun() here
                 if st.button("📖 选这页", key=f"qb_p_{page['id']}",
