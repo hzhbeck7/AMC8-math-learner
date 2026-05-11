@@ -46,6 +46,13 @@ except Exception:
     CookieController = None
     _COOKIES_AVAILABLE = False
 
+try:
+    from streamlit_paste_button import paste_image_button as _paste_btn
+    _PASTE_AVAILABLE = True
+except Exception:
+    _paste_btn = None
+    _PASTE_AVAILABLE = False
+
 
 # ─── Page Config ────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -277,6 +284,17 @@ hr { border-color:var(--border) !important; }
     .sc-deco { display:none; }
 }
 .footer { text-align:center; padding:2rem 0 1rem; color:#1E2D45; font-size:.72rem; line-height:1.9; }
+
+/* ── Paste button (streamlit-paste-button) ── */
+[data-testid="stFileUploader"] label {
+    color: #D0DCF0 !important;
+    font-size: .875rem !important;
+}
+/* Style the paste button iframe container */
+iframe[title="streamlit_paste_button.paste_image_button"] {
+    border-radius: 10px !important;
+    overflow: hidden !important;
+}
 
 /* ── Question Bank ── */
 .qbank-chapter-btn {
@@ -1785,32 +1803,22 @@ def main():
         tab_img, tab_txt = st.tabs(["📤 上传图片 / PDF", "✏️ 手动输入题目"])
 
         with tab_img:
-            st.caption("支持 AMC 8 题目截图、扫描件或 PDF（识别前 5 页）")
-            uploaded = st.file_uploader("拖拽或点击上传", type=["jpg", "jpeg", "png", "pdf"],
-                                        label_visibility="collapsed", key="upl")
-            if uploaded:
-                content_parts, preview = [], []
-                if uploaded.type == "application/pdf":
-                    with st.spinner("📄 解析 PDF..."):
-                        imgs = pdf_to_pil(uploaded.read(), max_pages=5)
-                    preview = imgs[:3]; content_parts = imgs
-                    st.info(f"PDF {len(imgs)} 页已加载")
-                else:
-                    img = Image.open(uploaded)
-                    preview = [img]; content_parts = [img]
-
+            # ── Helper: shared processing for any image input ──
+            def _process_and_show(content_parts: list, preview: list):
+                """Preview images and show the solve button."""
                 cols = st.columns(min(len(preview), 3))
                 for i, im in enumerate(preview[:3]):
                     with cols[i]:
-                        st.image(im, caption=f"第 {i+1} 页" if len(preview) > 1 else "上传图片",
+                        st.image(im,
+                                 caption=f"第 {i+1} 页" if len(preview) > 1 else "预览",
                                  use_container_width=True)
-
                 if not can_use_ai:
                     st.warning("⚠️ 当前没有可用的 API Key。请在左侧填入您自己的 Gemini API Key。")
                 else:
                     c1, c2, c3 = st.columns([1, 2, 1])
                     with c2:
-                        if st.button("🚀 开始智能解题", use_container_width=True, key="go_img"):
+                        if st.button("🚀 开始智能解题",
+                                     use_container_width=True, key="go_img"):
                             handle_question(
                                 api_key,
                                 ["请分析图片中的数学题目，按格式详细解答："] + content_parts,
@@ -1818,6 +1826,59 @@ def main():
                                 user_hash,
                                 image_parts=content_parts,
                             )
+
+            # ── 输入区说明 ──
+            st.markdown(
+                '<p style="color:#8899BB;font-size:.85rem;margin:.2rem 0 .8rem;">'
+                '三种方式任选其一：拖拽文件到上传框 · 点击选择文件 · 截图后 Ctrl+V 粘贴</p>',
+                unsafe_allow_html=True,
+            )
+
+            # ── 区域 A：文件上传（原生支持拖拽）──
+            uploaded = st.file_uploader(
+                "📂 拖拽 / 点击上传（JPG · PNG · PDF）",
+                type=["jpg", "jpeg", "png", "pdf"],
+                label_visibility="visible",
+                key="upl",
+            )
+            if uploaded:
+                content_parts, preview = [], []
+                if uploaded.type == "application/pdf":
+                    with st.spinner("📄 解析 PDF..."):
+                        imgs = pdf_to_pil(uploaded.read(), max_pages=5)
+                    preview = imgs[:3]
+                    content_parts = imgs
+                    st.info(f"PDF {len(imgs)} 页已加载")
+                else:
+                    img = Image.open(uploaded)
+                    preview = [img]
+                    content_parts = [img]
+                # Clear any previously pasted image when a new file is uploaded
+                st.session_state.pop("pasted_img", None)
+                _process_and_show(content_parts, preview)
+
+            # ── 区域 B：Ctrl+V 截图粘贴 ──
+            if _PASTE_AVAILABLE:
+                st.markdown(
+                    '<p style="color:#8899BB;font-size:.8rem;margin:.8rem 0 .3rem;">'
+                    '或者 — 截图后粘贴：</p>',
+                    unsafe_allow_html=True,
+                )
+                paste_result = _paste_btn(
+                    label="📋  截图粘贴（Ctrl+V）",
+                    background_color="#1C2E4A",
+                    hover_background_color="#1E3356",
+                    text_color="#FFFFFF",
+                    errors="raise",
+                )
+                if paste_result and paste_result.image_data is not None:
+                    pasted_img = paste_result.image_data  # PIL Image
+                    st.session_state["pasted_img"] = pasted_img
+
+            # Show previously pasted image (survives reruns)
+            if not uploaded and st.session_state.get("pasted_img") is not None:
+                pasted = st.session_state["pasted_img"]
+                _process_and_show([pasted], [pasted])
 
         with tab_txt:
             st.caption("直接粘贴或输入题目文字")
