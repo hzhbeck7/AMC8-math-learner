@@ -1129,23 +1129,27 @@ def b64_to_pil(b64_str: str) -> Image.Image:
 
 # ─── Question Bank UI ─────────────────────────────────────────────────────────
 def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
-    """Full question bank browser and launch interface."""
+    """Full question bank browser and launch interface.
 
-    # ── State ──
-    if "qb_chapter" not in st.session_state:
-        st.session_state["qb_chapter"] = None   # selected chapter filename
-    if "qb_page_idx" not in st.session_state:
-        st.session_state["qb_page_idx"] = None  # selected page index within chapter
+    Navigation state lives entirely in st.session_state — NO st.rerun() calls.
+    Streamlit re-runs automatically on every button click; calling st.rerun()
+    explicitly from inside a button handler causes a *second* run that can
+    reset other widget states (including the main_nav buttons), which is why
+    clicking "选这页" used to jump back to the free-solve view.
+    """
 
     index = load_qbank_index()
     if not index:
-        st.info("📚 题库暂未配置。请在 Streamlit Secrets 中添加 GITHUB_OWNER 和 GITHUB_REPO，或在本地 qbank/ 目录放置题库文件。")
+        st.info("📚 题库暂未配置。请在 Streamlit Secrets 中添加 GITHUB_OWNER 和 GITHUB_REPO，"
+                "或在本地 qbank/ 目录放置题库文件。")
         return
 
     chapters = index.get("chapters", [])
 
-    # ── Chapter picker (shown when no chapter selected) ──
-    if not st.session_state["qb_chapter"]:
+    # ══════════════════════════════════════════════════════════════════
+    # VIEW 1 — Chapter picker
+    # ══════════════════════════════════════════════════════════════════
+    if not st.session_state.get("qb_chapter"):
         st.markdown(
             '<p style="color:#F5C842;font-family:\'ZCOOL XiaoWei\',serif;'
             'font-size:1.25rem;margin:.5rem 0 1rem;">📚 选择章节</p>',
@@ -1153,7 +1157,6 @@ def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
         )
         st.caption(f"共 {len(chapters)} 章 · {index.get('total_pages', '?')} 页题目与讲解")
 
-        # Responsive grid: 2 columns
         rows = [chapters[i:i+2] for i in range(0, len(chapters), 2)]
         for row in rows:
             cols = st.columns(len(row))
@@ -1164,22 +1167,22 @@ def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
                         f"{ch['en_name']}  ·  {ch['page_count']} 页"
                     )
                     if st.button(label, key=f"qb_ch_{ch['id']}", use_container_width=True):
+                        # No st.rerun() — Streamlit reruns automatically on click
                         st.session_state["qb_chapter"] = ch["file"]
                         st.session_state["qb_page_idx"] = None
-                        st.rerun()
-        return
+        return   # will re-render next cycle with qb_chapter set
 
-    # ── Page browser (chapter selected, no page selected) ──
+    # ══════════════════════════════════════════════════════════════════
+    # Chapter is selected — show header with back button
+    # ══════════════════════════════════════════════════════════════════
     ch_file = st.session_state["qb_chapter"]
     ch_meta = next((c for c in chapters if c["file"] == ch_file), None)
 
-    # Back button
     col_back, col_title = st.columns([1, 8])
     with col_back:
         if st.button("← 返回", key="qb_back_ch"):
             st.session_state["qb_chapter"] = None
             st.session_state["qb_page_idx"] = None
-            st.rerun()
     with col_title:
         if ch_meta:
             st.markdown(
@@ -1189,113 +1192,114 @@ def render_qbank(api_key: str, user_hash: str, can_use_ai: bool):
                 unsafe_allow_html=True,
             )
 
-    if st.session_state["qb_page_idx"] is not None:
-        # ── Single page view ──────────────────────────────────────────────
-        with st.spinner("📄 加载页面..."):
-            chapter_data = load_qbank_chapter(ch_file)
+    # Re-check after possible back-button click in this same render cycle
+    if not st.session_state.get("qb_chapter"):
+        return
 
-        if not chapter_data:
-            st.error("加载失败，请重试")
+    # Load chapter data (cached)
+    with st.spinner("📚 加载章节..."):
+        chapter_data = load_qbank_chapter(ch_file)
+    if not chapter_data:
+        st.error("加载失败，请重试")
+        return
+    pages = chapter_data.get("pages", [])
+
+    # ══════════════════════════════════════════════════════════════════
+    # VIEW 3 — Single page detail
+    # ══════════════════════════════════════════════════════════════════
+    if st.session_state.get("qb_page_idx") is not None:
+        idx = st.session_state["qb_page_idx"]
+        # Guard against stale index from a different chapter
+        if idx >= len(pages):
             st.session_state["qb_page_idx"] = None
             return
-
-        pages = chapter_data.get("pages", [])
-        idx = st.session_state["qb_page_idx"]
         page = pages[idx]
 
-        # Navigation row
+        # Navigation row (no st.rerun — auto-rerun on click)
         nav1, nav2, nav3, nav_info = st.columns([1, 1, 1, 4])
         with nav1:
             if st.button("← 上页", key="qb_prev", disabled=(idx == 0)):
                 st.session_state["qb_page_idx"] = idx - 1
-                st.rerun()
         with nav2:
             if st.button("下页 →", key="qb_next", disabled=(idx >= len(pages) - 1)):
                 st.session_state["qb_page_idx"] = idx + 1
-                st.rerun()
         with nav3:
             if st.button("📋 列表", key="qb_list"):
                 st.session_state["qb_page_idx"] = None
-                st.rerun()
         with nav_info:
             ptype_label = {"lecture": "知识讲解", "example": "例题", "homework": "作业练习"}.get(
                 page.get("page_type", ""), "")
             st.markdown(
                 f'<p style="color:#8899BB;font-size:.82rem;margin:.5rem 0;">'
-                f'第 {idx+1} / {len(pages)} 页 · 书页 {page.get("book_page","?")} · {ptype_label}</p>',
+                f'第 {idx+1} / {len(pages)} 页 · '
+                f'书页 {page.get("book_page","?")} · {ptype_label}</p>',
                 unsafe_allow_html=True,
             )
 
-        # Show page image
-        img = b64_to_pil(page["img_b64"])
-        st.image(img, use_container_width=True)
+        # Page image + solve button — guard against nav click in same cycle
+        if st.session_state.get("qb_page_idx") is not None:
+            img = b64_to_pil(page["img_b64"])
+            st.image(img, use_container_width=True)
 
-        # Solve button
-        if not can_use_ai:
-            st.warning("⚠️ 请先在左侧输入 Gemini API Key 或等待免费额度恢复。")
-        else:
-            c1, c2, c3 = st.columns([1, 2, 1])
-            with c2:
-                if st.button("🚀 AI 教练讲解这道题", use_container_width=True, key="qb_solve"):
-                    handle_question(
-                        api_key,
-                        ["请分析图片中的AMC 8题目，按格式详细解答：", img],
-                        f"题库：{ch_meta['cn_name'] if ch_meta else ''} 第{page.get('book_page','?')}页",
-                        user_hash,
-                        image_parts=[img],
-                    )
-                    # Scroll user to result — st.rerun not needed, handle_question sets session state
-    else:
-        # ── Page thumbnail grid ──────────────────────────────────────────
-        with st.spinner("📚 加载章节..."):
-            chapter_data = load_qbank_chapter(ch_file)
+            if not can_use_ai:
+                st.warning("⚠️ 请先在左侧输入 Gemini API Key 或等待免费额度恢复。")
+            else:
+                c1, c2, c3 = st.columns([1, 2, 1])
+                with c2:
+                    if st.button("🚀 AI 教练讲解这道题",
+                                 use_container_width=True, key="qb_solve"):
+                        handle_question(
+                            api_key,
+                            ["请分析图片中的AMC 8题目，按格式详细解答：", img],
+                            f"题库：{ch_meta['cn_name'] if ch_meta else ''} "
+                            f"第{page.get('book_page','?')}页",
+                            user_hash,
+                            image_parts=[img],
+                        )
+        return
 
-        if not chapter_data:
-            st.error("加载失败，请重试")
-            return
+    # ══════════════════════════════════════════════════════════════════
+    # VIEW 2 — Thumbnail grid
+    # ══════════════════════════════════════════════════════════════════
+    st.caption(f"共 {len(pages)} 页 · 点击「选这页」进入全页预览，再点「AI 教练讲解」开始解题")
 
-        pages = chapter_data.get("pages", [])
-        st.caption(f"共 {len(pages)} 页 · 点击任意页面预览并解题")
+    type_filter = st.radio(
+        "筛选类型",
+        ["全部", "知识讲解", "例题", "作业练习"],
+        horizontal=True,
+        key="qb_type_filter",
+        label_visibility="collapsed",
+    )
+    type_map = {"全部": None, "知识讲解": "lecture", "例题": "example", "作业练习": "homework"}
+    selected_type = type_map[type_filter]
+    filtered = [p for p in pages if selected_type is None or p.get("page_type") == selected_type]
+    st.caption(f"筛选结果：{len(filtered)} 页")
 
-        # Filter bar
-        filter_col1, filter_col2 = st.columns([2, 1])
-        with filter_col1:
-            type_filter = st.radio(
-                "筛选",
-                ["全部", "知识讲解", "例题", "作业练习"],
-                horizontal=True,
-                key="qb_type_filter",
-                label_visibility="collapsed",
-            )
-        type_map = {"全部": None, "知识讲解": "lecture", "例题": "example", "作业练习": "homework"}
-        selected_type = type_map[type_filter]
-        filtered = [p for p in pages if selected_type is None or p.get("page_type") == selected_type]
-
-        st.caption(f"筛选结果：{len(filtered)} 页")
-
-        # Thumbnail grid: 3 per row
-        for row_start in range(0, len(filtered), 3):
-            row_pages = filtered[row_start:row_start + 3]
-            cols = st.columns(3)
-            for col, page in zip(cols, row_pages):
-                with col:
-                    # Decode thumbnail image
-                    img = b64_to_pil(page["img_b64"])
-                    # Show small thumbnail
-                    st.image(img, use_container_width=True)
-                    # Tag + button row
-                    ptype = page.get("page_type", "")
-                    tag_class = {"lecture": "tag-lecture", "example": "tag-example", "homework": "tag-homework"}.get(ptype, "tag-lecture")
-                    tag_label = {"lecture": "讲解", "example": "例题", "homework": "作业"}.get(ptype, "")
-                    st.markdown(
-                        f'<span class="qbank-page-tag {tag_class}">{tag_label}</span>'
-                        f'<span style="color:#8899BB;font-size:.72rem;">书页 {page.get("book_page","?")}</span>',
-                        unsafe_allow_html=True,
-                    )
-                    real_idx = pages.index(page)
-                    if st.button("📖 选这页", key=f"qb_p_{page['id']}", use_container_width=True):
-                        st.session_state["qb_page_idx"] = real_idx
-                        st.rerun()
+    # Thumbnail grid — 3 per row, no st.rerun()
+    for row_start in range(0, len(filtered), 3):
+        row_pages = filtered[row_start:row_start + 3]
+        cols = st.columns(3)
+        for col, page in zip(cols, row_pages):
+            with col:
+                img = b64_to_pil(page["img_b64"])
+                st.image(img, use_container_width=True)
+                ptype = page.get("page_type", "")
+                tag_class = {"lecture": "tag-lecture",
+                             "example": "tag-example",
+                             "homework": "tag-homework"}.get(ptype, "tag-lecture")
+                tag_label = {"lecture": "讲解", "example": "例题",
+                             "homework": "作业"}.get(ptype, "")
+                st.markdown(
+                    f'<span class="qbank-page-tag {tag_class}">{tag_label}</span>'
+                    f'<span style="color:#8899BB;font-size:.72rem;">'
+                    f'书页 {page.get("book_page","?")}</span>',
+                    unsafe_allow_html=True,
+                )
+                real_idx = pages.index(page)
+                # ← KEY FIX: no st.rerun() here
+                if st.button("📖 选这页", key=f"qb_p_{page['id']}",
+                             use_container_width=True):
+                    st.session_state["qb_page_idx"] = real_idx
 
 
 # ─── User identity & cookies ────────────────────────────────────────────────
@@ -1728,7 +1732,7 @@ def main():
             type="primary" if free_active else "secondary",
         ):
             st.session_state["main_nav"] = "free"
-            st.rerun()
+            # No st.rerun() — Streamlit reruns automatically on button click
     with nav_c2:
         qb_active = st.session_state["main_nav"] == "qbank"
         if st.button(
@@ -1738,7 +1742,7 @@ def main():
             type="primary" if qb_active else "secondary",
         ):
             st.session_state["main_nav"] = "qbank"
-            st.rerun()
+            # No st.rerun() — Streamlit reruns automatically on button click
 
     st.markdown('<hr style="margin:.6rem 0 1.2rem;">', unsafe_allow_html=True)
     mode = st.session_state["main_nav"]
