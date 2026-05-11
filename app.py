@@ -148,6 +148,16 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stAppViewContainer
     padding: .6rem 1rem; border-radius: 6px; margin: .6rem 0 !important;
 }
 
+/* Inline code in cards — neutral, so it does not look like gold math */
+.sc-md-wrap code {
+    background: rgba(255,255,255,0.08) !important;
+    color: #CBD5E1 !important;
+    padding: .1rem .4rem !important;
+    border-radius: 4px !important;
+    font-size: .88em !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+}
+
 .hint-step {
     background: rgba(244, 114, 182, 0.08);
     border-left: 3px solid #F472B6; border-radius: 8px;
@@ -527,6 +537,7 @@ TUTOR_PROMPT = r"""你是一位风趣幽默、充满激情的奥数教练，专�
 - 独立公式用 $$...$$
 - 不要用 \( \) 或 \[ \]
 - 用 \times 而不是 ×，\frac{a}{b} 而不是 a/b
+- **绝对不要**用反引号（`` ` ``）包裹数学公式，错误示范：`$x^2$`，正确写法：$x^2$
 """
 
 
@@ -805,13 +816,33 @@ def generate_audio(text: str):
 
 # ─── Parse AI response into sections ────────────────────────────────────────
 def _normalize_latex(text: str) -> str:
-    if not text: return text
+    r"""Fix LaTeX formatting in AI output.
+
+    The AI often wraps LaTeX in backticks, e.g. `$\\frac{1}{2}$`, which
+    Streamlit renders as inline code (colored box with literal $ signs)
+    instead of KaTeX. We strip the backticks so KaTeX renders properly.
+    """
+    if not text:
+        return text
+
+    # 1. \( ... \) -> $ ... $   and   \[ ... \] -> $$ ... $$
     text = re.sub(r"\\\(", "$", text)
     text = re.sub(r"\\\)", "$", text)
     text = re.sub(r"\\\[", "$$", text)
     text = re.sub(r"\\\]", "$$", text)
-    return text
 
+    # 2. `$$...$$` (display math in backticks) -> $$...$$  (run before single-$)
+    text = re.sub(r"`(\$\$[^`]+?\$\$)`", r"\1", text)
+
+    # 3. `$...$` (inline math in backticks) -> $...$
+    text = re.sub(r"`(\$[^`]+?\$)`", r"\1", text)
+
+    # 4. `\cmd{...}` bare LaTeX in backticks without $ -> $\cmd{...}$
+    _CMDS = (r"frac|times|div|sqrt|cdot|pm|leq|geq|neq|approx"
+             r"|sum|int|triangle|angle|circ|overline|vec")
+    text = re.sub(rf"`([^`]*\\(?:{_CMDS})[^`]*)`", r"$\1$", text)
+
+    return text
 
 def parse_sections(text: str) -> dict:
     markers = {"theater": "数学小剧场", "coach": "教练透视眼", "logic": "逻辑拆解步"}
